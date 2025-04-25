@@ -11,12 +11,12 @@ export const GetVoiceLanguage: core.serialization.ObjectSchema<
     Speechify.tts.GetVoiceLanguage
 > = core.serialization.object({
     locale: core.serialization.string(),
-    previewAudio: core.serialization.property("preview_audio", core.serialization.string()),
+    previewAudio: core.serialization.property("preview_audio", core.serialization.string().optionalNullable()),
 });
 
 export declare namespace GetVoiceLanguage {
     export interface Raw {
         locale: string;
-        preview_audio: string;
+        preview_audio?: (string | null) | null;
     }
 }
