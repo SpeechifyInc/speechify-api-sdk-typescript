@@ -14,22 +14,22 @@ export const CreatedVoice: core.serialization.ObjectSchema<
     Speechify.tts.CreatedVoice
 > = core.serialization.object({
     avatarImage: core.serialization.property("avatar_image", core.serialization.string().optional()),
-    displayName: core.serialization.property("display_name", core.serialization.string().optional()),
-    gender: CreatedVoiceGender.optional(),
-    locale: core.serialization.string().optional(),
-    id: core.serialization.string().optional(),
-    models: core.serialization.list(CreateVoiceModel).optional(),
-    type: CreatedVoiceType.optional(),
+    displayName: core.serialization.property("display_name", core.serialization.string()),
+    gender: CreatedVoiceGender,
+    locale: core.serialization.string(),
+    id: core.serialization.string(),
+    models: core.serialization.list(CreateVoiceModel),
+    type: CreatedVoiceType,
 });
 
 export declare namespace CreatedVoice {
     export interface Raw {
         avatar_image?: string | null;
-        display_name?: string | null;
-        gender?: CreatedVoiceGender.Raw | null;
-        locale?: string | null;
-        id?: string | null;
-        models?: CreateVoiceModel.Raw[] | null;
-        type?: CreatedVoiceType.Raw | null;
+        display_name: string;
+        gender: CreatedVoiceGender.Raw;
+        locale: string;
+        id: string;
+        models: CreateVoiceModel.Raw[];
+        type: CreatedVoiceType.Raw;
     }
 }

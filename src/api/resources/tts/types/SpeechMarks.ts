@@ -9,11 +9,11 @@ import * as Speechify from "../../../index";
  */
 export interface SpeechMarks {
     /** Array of NestedChunk, each providing detailed segment information within the synthesized speech. */
-    chunks?: Speechify.tts.NestedChunk[];
-    end?: number;
-    endTime?: number;
-    start?: number;
-    startTime?: number;
-    type?: string;
+    chunks: Speechify.tts.NestedChunk[];
+    end: number;
+    endTime: number;
+    start: number;
+    startTime: number;
+    type: string;
     value?: string;
 }

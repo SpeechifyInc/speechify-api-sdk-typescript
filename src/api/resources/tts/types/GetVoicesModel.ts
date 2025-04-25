@@ -5,6 +5,6 @@
 import * as Speechify from "../../../index";
 
 export interface GetVoicesModel {
-    languages?: Speechify.tts.GetVoiceLanguage[];
-    name?: Speechify.tts.GetVoicesModelName;
+    languages: Speechify.tts.GetVoiceLanguage[];
+    name: Speechify.tts.GetVoicesModelName;
 }

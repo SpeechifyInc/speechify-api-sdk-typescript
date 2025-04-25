@@ -6,10 +6,10 @@ import * as Speechify from "../../../index";
 
 export interface CreatedVoice {
     avatarImage?: string;
-    displayName?: string;
-    gender?: Speechify.tts.CreatedVoiceGender;
-    locale?: string;
-    id?: string;
-    models?: Speechify.tts.CreateVoiceModel[];
-    type?: Speechify.tts.CreatedVoiceType;
+    displayName: string;
+    gender: Speechify.tts.CreatedVoiceGender;
+    locale: string;
+    id: string;
+    models: Speechify.tts.CreateVoiceModel[];
+    type: Speechify.tts.CreatedVoiceType;
 }

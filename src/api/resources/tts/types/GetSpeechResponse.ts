@@ -6,10 +6,10 @@ import * as Speechify from "../../../index";
 
 export interface GetSpeechResponse {
     /** Synthesized speech audio, Base64-encoded */
-    audioData?: string;
+    audioData: string;
     /** The format of the audio data */
-    audioFormat?: Speechify.tts.GetSpeechResponseAudioFormat;
+    audioFormat: Speechify.tts.GetSpeechResponseAudioFormat;
     /** The number of billable characters processed in the request. */
-    billableCharactersCount?: number;
-    speechMarks?: Speechify.tts.SpeechMarks;
+    billableCharactersCount: number;
+    speechMarks: Speechify.tts.SpeechMarks;
 }

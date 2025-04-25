@@ -6,12 +6,12 @@ import * as Speechify from "../../../index";
 
 export interface GetVoice {
     avatarImage?: string;
-    displayName?: string;
-    gender?: Speechify.tts.GetVoiceGender;
-    locale?: string;
-    id?: string;
-    models?: Speechify.tts.GetVoicesModel[];
+    displayName: string;
+    gender: Speechify.tts.GetVoiceGender;
+    locale: string;
+    id: string;
+    models: Speechify.tts.GetVoicesModel[];
     previewAudio?: string;
-    tags?: string[];
-    type?: Speechify.tts.GetVoiceType;
+    tags: string[];
+    type: Speechify.tts.GetVoiceType;
 }

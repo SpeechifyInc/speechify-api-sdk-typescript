@@ -12,26 +12,26 @@ import { GetVoiceType } from "./GetVoiceType";
 export const GetVoice: core.serialization.ObjectSchema<serializers.tts.GetVoice.Raw, Speechify.tts.GetVoice> =
     core.serialization.object({
         avatarImage: core.serialization.property("avatar_image", core.serialization.string().optional()),
-        displayName: core.serialization.property("display_name", core.serialization.string().optional()),
-        gender: GetVoiceGender.optional(),
-        locale: core.serialization.string().optional(),
-        id: core.serialization.string().optional(),
-        models: core.serialization.list(GetVoicesModel).optional(),
+        displayName: core.serialization.property("display_name", core.serialization.string()),
+        gender: GetVoiceGender,
+        locale: core.serialization.string(),
+        id: core.serialization.string(),
+        models: core.serialization.list(GetVoicesModel),
         previewAudio: core.serialization.property("preview_audio", core.serialization.string().optional()),
-        tags: core.serialization.list(core.serialization.string()).optional(),
-        type: GetVoiceType.optional(),
+        tags: core.serialization.list(core.serialization.string()),
+        type: GetVoiceType,
     });
 
 export declare namespace GetVoice {
     export interface Raw {
         avatar_image?: string | null;
-        display_name?: string | null;
-        gender?: GetVoiceGender.Raw | null;
-        locale?: string | null;
-        id?: string | null;
-        models?: GetVoicesModel.Raw[] | null;
+        display_name: string;
+        gender: GetVoiceGender.Raw;
+        locale: string;
+        id: string;
+        models: GetVoicesModel.Raw[];
         preview_audio?: string | null;
-        tags?: string[] | null;
-        type?: GetVoiceType.Raw | null;
+        tags: string[];
+        type: GetVoiceType.Raw;
     }
 }

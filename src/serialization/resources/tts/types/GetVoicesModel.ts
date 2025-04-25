@@ -12,13 +12,13 @@ export const GetVoicesModel: core.serialization.ObjectSchema<
     serializers.tts.GetVoicesModel.Raw,
     Speechify.tts.GetVoicesModel
 > = core.serialization.object({
-    languages: core.serialization.list(GetVoiceLanguage).optional(),
-    name: GetVoicesModelName.optional(),
+    languages: core.serialization.list(GetVoiceLanguage),
+    name: GetVoicesModelName,
 });
 
 export declare namespace GetVoicesModel {
     export interface Raw {
-        languages?: GetVoiceLanguage.Raw[] | null;
-        name?: GetVoicesModelName.Raw | null;
+        languages: GetVoiceLanguage.Raw[];
+        name: GetVoicesModelName.Raw;
     }
 }

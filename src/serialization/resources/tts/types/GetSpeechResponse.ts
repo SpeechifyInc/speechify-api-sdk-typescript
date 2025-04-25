@@ -12,20 +12,17 @@ export const GetSpeechResponse: core.serialization.ObjectSchema<
     serializers.tts.GetSpeechResponse.Raw,
     Speechify.tts.GetSpeechResponse
 > = core.serialization.object({
-    audioData: core.serialization.property("audio_data", core.serialization.string().optional()),
-    audioFormat: core.serialization.property("audio_format", GetSpeechResponseAudioFormat.optional()),
-    billableCharactersCount: core.serialization.property(
-        "billable_characters_count",
-        core.serialization.number().optional(),
-    ),
-    speechMarks: core.serialization.property("speech_marks", SpeechMarks.optional()),
+    audioData: core.serialization.property("audio_data", core.serialization.string()),
+    audioFormat: core.serialization.property("audio_format", GetSpeechResponseAudioFormat),
+    billableCharactersCount: core.serialization.property("billable_characters_count", core.serialization.number()),
+    speechMarks: core.serialization.property("speech_marks", SpeechMarks),
 });
 
 export declare namespace GetSpeechResponse {
     export interface Raw {
-        audio_data?: string | null;
-        audio_format?: GetSpeechResponseAudioFormat.Raw | null;
-        billable_characters_count?: number | null;
-        speech_marks?: SpeechMarks.Raw | null;
+        audio_data: string;
+        audio_format: GetSpeechResponseAudioFormat.Raw;
+        billable_characters_count: number;
+        speech_marks: SpeechMarks.Raw;
     }
 }

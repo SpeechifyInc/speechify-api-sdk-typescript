@@ -9,23 +9,23 @@ import { NestedChunk } from "./NestedChunk";
 
 export const SpeechMarks: core.serialization.ObjectSchema<serializers.tts.SpeechMarks.Raw, Speechify.tts.SpeechMarks> =
     core.serialization.object({
-        chunks: core.serialization.list(NestedChunk).optional(),
-        end: core.serialization.number().optional(),
-        endTime: core.serialization.property("end_time", core.serialization.number().optional()),
-        start: core.serialization.number().optional(),
-        startTime: core.serialization.property("start_time", core.serialization.number().optional()),
-        type: core.serialization.string().optional(),
+        chunks: core.serialization.list(NestedChunk),
+        end: core.serialization.number(),
+        endTime: core.serialization.property("end_time", core.serialization.number()),
+        start: core.serialization.number(),
+        startTime: core.serialization.property("start_time", core.serialization.number()),
+        type: core.serialization.string(),
         value: core.serialization.string().optional(),
     });
 
 export declare namespace SpeechMarks {
     export interface Raw {
-        chunks?: NestedChunk.Raw[] | null;
-        end?: number | null;
-        end_time?: number | null;
-        start?: number | null;
-        start_time?: number | null;
-        type?: string | null;
+        chunks: NestedChunk.Raw[];
+        end: number;
+        end_time: number;
+        start: number;
+        start_time: number;
+        type: string;
         value?: string | null;
     }
 }

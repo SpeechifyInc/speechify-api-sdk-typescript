@@ -3,6 +3,6 @@
  */
 
 export interface GetVoiceLanguage {
-    locale?: string;
-    previewAudio?: string;
+    locale: string;
+    previewAudio: string;
 }
