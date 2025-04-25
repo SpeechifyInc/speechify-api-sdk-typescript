@@ -37,7 +37,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Set up node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@speechify'
+          token: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: yarn install
       - name: Build
@@ -45,7 +49,6 @@ jobs:
 
       - name: Publish to npm
         run: |
-          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
           if [[ ${GITHUB_REF} == *alpha* ]]; then
             npm publish --access public --tag alpha
           elif [[ ${GITHUB_REF} == *beta* ]]; then
@@ -54,4 +57,4 @@ jobs:
             npm publish --access public
           fi
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
