@@ -5,7 +5,7 @@
 import * as Speechify from "../../../index";
 
 export interface CreatedVoice {
-    avatarImage?: string;
+    avatarImage?: string | null;
     displayName: string;
     gender: Speechify.tts.CreatedVoiceGender;
     locale: string;

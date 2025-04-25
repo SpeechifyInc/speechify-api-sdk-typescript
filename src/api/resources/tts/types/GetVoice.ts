@@ -5,13 +5,13 @@
 import * as Speechify from "../../../index";
 
 export interface GetVoice {
-    avatarImage?: string;
+    avatarImage?: string | null;
     displayName: string;
     gender: Speechify.tts.GetVoiceGender;
     locale: string;
     id: string;
     models: Speechify.tts.GetVoicesModel[];
-    previewAudio?: string;
+    previewAudio?: string | null;
     tags: string[];
     type: Speechify.tts.GetVoiceType;
 }

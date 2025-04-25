@@ -11,26 +11,26 @@ import { GetVoiceType } from "./GetVoiceType";
 
 export const GetVoice: core.serialization.ObjectSchema<serializers.tts.GetVoice.Raw, Speechify.tts.GetVoice> =
     core.serialization.object({
-        avatarImage: core.serialization.property("avatar_image", core.serialization.string().optional()),
+        avatarImage: core.serialization.property("avatar_image", core.serialization.string().optionalNullable()),
         displayName: core.serialization.property("display_name", core.serialization.string()),
         gender: GetVoiceGender,
         locale: core.serialization.string(),
         id: core.serialization.string(),
         models: core.serialization.list(GetVoicesModel),
-        previewAudio: core.serialization.property("preview_audio", core.serialization.string().optional()),
+        previewAudio: core.serialization.property("preview_audio", core.serialization.string().optionalNullable()),
         tags: core.serialization.list(core.serialization.string()),
         type: GetVoiceType,
     });
 
 export declare namespace GetVoice {
     export interface Raw {
-        avatar_image?: string | null;
+        avatar_image?: (string | null) | null;
         display_name: string;
         gender: GetVoiceGender.Raw;
         locale: string;
         id: string;
         models: GetVoicesModel.Raw[];
-        preview_audio?: string | null;
+        preview_audio?: (string | null) | null;
         tags: string[];
         type: GetVoiceType.Raw;
     }

@@ -13,7 +13,7 @@ export const CreatedVoice: core.serialization.ObjectSchema<
     serializers.tts.CreatedVoice.Raw,
     Speechify.tts.CreatedVoice
 > = core.serialization.object({
-    avatarImage: core.serialization.property("avatar_image", core.serialization.string().optional()),
+    avatarImage: core.serialization.property("avatar_image", core.serialization.string().optionalNullable()),
     displayName: core.serialization.property("display_name", core.serialization.string()),
     gender: CreatedVoiceGender,
     locale: core.serialization.string(),
@@ -24,7 +24,7 @@ export const CreatedVoice: core.serialization.ObjectSchema<
 
 export declare namespace CreatedVoice {
     export interface Raw {
-        avatar_image?: string | null;
+        avatar_image?: (string | null) | null;
         display_name: string;
         gender: CreatedVoiceGender.Raw;
         locale: string;
