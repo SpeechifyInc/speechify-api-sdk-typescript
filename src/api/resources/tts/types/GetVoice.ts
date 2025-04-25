@@ -12,6 +12,6 @@ export interface GetVoice {
     id: string;
     models: Speechify.tts.GetVoicesModel[];
     previewAudio?: string | null;
-    tags: string[];
+    tags?: string[] | null;
     type: Speechify.tts.GetVoiceType;
 }

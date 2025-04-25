@@ -18,7 +18,7 @@ export const GetVoice: core.serialization.ObjectSchema<serializers.tts.GetVoice.
         id: core.serialization.string(),
         models: core.serialization.list(GetVoicesModel),
         previewAudio: core.serialization.property("preview_audio", core.serialization.string().optionalNullable()),
-        tags: core.serialization.list(core.serialization.string()),
+        tags: core.serialization.list(core.serialization.string()).optionalNullable(),
         type: GetVoiceType,
     });
 
@@ -31,7 +31,7 @@ export declare namespace GetVoice {
         id: string;
         models: GetVoicesModel.Raw[];
         preview_audio?: (string | null) | null;
-        tags: string[];
+        tags?: (string[] | null) | null;
         type: GetVoiceType.Raw;
     }
 }
