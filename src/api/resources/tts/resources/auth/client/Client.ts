@@ -33,7 +33,7 @@ export class Auth {
     constructor(protected readonly _options: Auth.Options = {}) {}
 
     /**
-     * Create a new API token for the logged in user
+     * WARNING: This endpoint is deprecated. Create a new API token for the logged in user.
      *
      * @param {Speechify.tts.CreateAccessTokenRequest} request
      * @param {Auth.RequestOptions} requestOptions - Request-specific configuration.
@@ -59,8 +59,8 @@ export class Auth {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "0.0.1",
-                "User-Agent": "@speechify/api/0.0.1",
+                "X-Fern-SDK-Version": "0.0.2",
+                "User-Agent": "@speechify/api/0.0.2",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ...requestOptions?.headers,
