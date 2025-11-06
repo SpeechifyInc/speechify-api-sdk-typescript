@@ -5,10 +5,11 @@
 /**
  * The format of the audio data
  */
-export type GetSpeechResponseAudioFormat = "wav" | "mp3" | "ogg" | "aac";
+export type GetSpeechResponseAudioFormat = "wav" | "mp3" | "ogg" | "aac" | "pcm";
 export const GetSpeechResponseAudioFormat = {
     Wav: "wav",
     Mp3: "mp3",
     Ogg: "ogg",
     Aac: "aac",
+    Pcm: "pcm",
 } as const;

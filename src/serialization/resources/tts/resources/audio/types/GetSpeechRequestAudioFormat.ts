@@ -9,8 +9,8 @@ import * as core from "../../../../../../core";
 export const GetSpeechRequestAudioFormat: core.serialization.Schema<
     serializers.tts.GetSpeechRequestAudioFormat.Raw,
     Speechify.tts.GetSpeechRequestAudioFormat
-> = core.serialization.enum_(["wav", "mp3", "ogg", "aac"]);
+> = core.serialization.enum_(["wav", "mp3", "ogg", "aac", "pcm"]);
 
 export declare namespace GetSpeechRequestAudioFormat {
-    export type Raw = "wav" | "mp3" | "ogg" | "aac";
+    export type Raw = "wav" | "mp3" | "ogg" | "aac" | "pcm";
 }

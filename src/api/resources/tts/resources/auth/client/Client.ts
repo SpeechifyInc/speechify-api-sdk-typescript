@@ -39,6 +39,7 @@ export class Auth {
      * @param {Auth.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Speechify.tts.BadRequestError}
+     * @throws {@link Speechify.tts.UnauthorizedError}
      *
      * @example
      *     await client.tts.auth.createAccessToken({})
@@ -59,8 +60,8 @@ export class Auth {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "1.0.0",
-                "User-Agent": "@speechify/api/1.0.0",
+                "X-Fern-SDK-Version": "1.0.1",
+                "User-Agent": "@speechify/api/1.0.1",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ...requestOptions?.headers,
@@ -89,6 +90,8 @@ export class Auth {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Speechify.tts.BadRequestError(_response.error.body);
+                case 401:
+                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
                 default:
                     throw new errors.SpeechifyError({
                         statusCode: _response.error.statusCode,

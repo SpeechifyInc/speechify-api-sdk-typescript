@@ -5,10 +5,11 @@
 /**
  * The format for the output audio. Note, that the current default is "wav", but there's no guarantee it will not change in the future. We recommend always passing the specific param you expect.
  */
-export type GetSpeechRequestAudioFormat = "wav" | "mp3" | "ogg" | "aac";
+export type GetSpeechRequestAudioFormat = "wav" | "mp3" | "ogg" | "aac" | "pcm";
 export const GetSpeechRequestAudioFormat = {
     Wav: "wav",
     Mp3: "mp3",
     Ogg: "ogg",
     Aac: "aac",
+    Pcm: "pcm",
 } as const;

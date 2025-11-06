@@ -39,6 +39,7 @@ export class Voices {
      *
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Speechify.tts.UnauthorizedError}
      * @throws {@link Speechify.tts.NotFoundError}
      * @throws {@link Speechify.tts.InternalServerError}
      *
@@ -58,8 +59,8 @@ export class Voices {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "1.0.0",
-                "User-Agent": "@speechify/api/1.0.0",
+                "X-Fern-SDK-Version": "1.0.1",
+                "User-Agent": "@speechify/api/1.0.1",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ...requestOptions?.headers,
@@ -82,6 +83,8 @@ export class Voices {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
                 case 404:
                     throw new Speechify.tts.NotFoundError(_response.error.body);
                 case 500:
@@ -116,6 +119,7 @@ export class Voices {
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Speechify.tts.BadRequestError}
+     * @throws {@link Speechify.tts.UnauthorizedError}
      * @throws {@link Speechify.tts.PaymentRequiredError}
      * @throws {@link Speechify.tts.InternalServerError}
      *
@@ -160,8 +164,8 @@ export class Voices {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "1.0.0",
-                "User-Agent": "@speechify/api/1.0.0",
+                "X-Fern-SDK-Version": "1.0.1",
+                "User-Agent": "@speechify/api/1.0.1",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ..._maybeEncodedRequest.headers,
@@ -188,6 +192,8 @@ export class Voices {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Speechify.tts.BadRequestError(_response.error.body);
+                case 401:
+                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
                 case 402:
                     throw new Speechify.tts.PaymentRequiredError(_response.error.body);
                 case 500:
@@ -222,6 +228,7 @@ export class Voices {
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Speechify.tts.BadRequestError}
+     * @throws {@link Speechify.tts.UnauthorizedError}
      * @throws {@link Speechify.tts.NotFoundError}
      * @throws {@link Speechify.tts.InternalServerError}
      *
@@ -241,8 +248,8 @@ export class Voices {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "1.0.0",
-                "User-Agent": "@speechify/api/1.0.0",
+                "X-Fern-SDK-Version": "1.0.1",
+                "User-Agent": "@speechify/api/1.0.1",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ...requestOptions?.headers,
@@ -261,6 +268,8 @@ export class Voices {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Speechify.tts.BadRequestError(_response.error.body);
+                case 401:
+                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
                 case 404:
                     throw new Speechify.tts.NotFoundError(_response.error.body);
                 case 500:
@@ -308,8 +317,8 @@ export class Voices {
                 Authorization: await this._getAuthorizationHeader(),
                 "X-Fern-Language": "JavaScript",
                 "X-Fern-SDK-Name": "@speechify/api",
-                "X-Fern-SDK-Version": "1.0.0",
-                "User-Agent": "@speechify/api/1.0.0",
+                "X-Fern-SDK-Version": "1.0.1",
+                "User-Agent": "@speechify/api/1.0.1",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
                 ...requestOptions?.headers,

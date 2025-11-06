@@ -3,7 +3,7 @@
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fspeechifyinc%2Fspeechify-api-sdk-typescript)
 [![npm shield](https://img.shields.io/npm/v/@speechify/api)](https://www.npmjs.com/package/@speechify/api)
 
-The Speechifyinc TypeScript library provides convenient access to the Speechifyinc API from TypeScript.
+The Speechifyinc TypeScript library provides convenient access to the Speechifyinc APIs from TypeScript.
 
 ## Documentation
 
@@ -17,7 +17,7 @@ npm i -s @speechify/api
 
 ## Reference
 
-A full reference for this library is available [here](./reference.md).
+A full reference for this library is available [here](https://github.com/speechifyinc/speechify-api-sdk-typescript/blob/HEAD/./reference.md).
 
 ## Usage
 

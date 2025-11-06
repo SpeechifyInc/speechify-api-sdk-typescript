@@ -9,8 +9,8 @@ import * as core from "../../../../../../core";
 export const AudioStreamRequestAccept: core.serialization.Schema<
     serializers.tts.AudioStreamRequestAccept.Raw,
     Speechify.tts.AudioStreamRequestAccept
-> = core.serialization.enum_(["audio/mpeg", "audio/ogg", "audio/aac"]);
+> = core.serialization.enum_(["audio/mpeg", "audio/ogg", "audio/aac", "audio/pcm"]);
 
 export declare namespace AudioStreamRequestAccept {
-    export type Raw = "audio/mpeg" | "audio/ogg" | "audio/aac";
+    export type Raw = "audio/mpeg" | "audio/ogg" | "audio/aac" | "audio/pcm";
 }
