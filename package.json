@@ -2,7 +2,7 @@
     "name": "@speechify/api",
     "version": "1.0.1",
     "private": false,
-    "repository": "https://github.com/speechifyinc/speechify-api-sdk-typescript",
+    "repository": "https://github.com/SpeechifyInc/speechify-api-sdk-typescript",
     "main": "./index.js",
     "types": "./index.d.ts",
     "scripts": {
