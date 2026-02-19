@@ -3,7 +3,7 @@
  */
 
 export const SpeechifyEnvironment = {
-    Default: "https://api.sws.speechify.com",
+    Default: "https://api.speechify.ai",
 } as const;
 
 export type SpeechifyEnvironment = typeof SpeechifyEnvironment.Default;

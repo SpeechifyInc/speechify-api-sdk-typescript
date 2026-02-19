@@ -5,9 +5,25 @@
 
 The Speechifyinc TypeScript library provides convenient access to the Speechifyinc APIs from TypeScript.
 
+## Table of Contents
+
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Request and Response Types](#request-and-response-types)
+- [Exception Handling](#exception-handling)
+- [Advanced](#advanced)
+    - [Additional Headers](#additional-headers)
+    - [Retries](#retries)
+    - [Timeouts](#timeouts)
+    - [Aborting Requests](#aborting-requests)
+    - [Runtime Compatibility](#runtime-compatibility)
+- [Contributing](#contributing)
+
 ## Documentation
 
-API reference documentation is available [here](https://docs.sws.speechify.com/api-reference).
+API reference documentation is available [here](https://docs.speechify.ai/api-reference).
 
 ## Installation
 
@@ -33,7 +49,7 @@ await client.tts.audio.speech({
 });
 ```
 
-## Request And Response Types
+## Request and Response Types
 
 The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
 following namespace:

@@ -8,13 +8,13 @@ export interface GetStreamRequest {
     accept: Speechify.tts.AudioStreamRequestAccept;
     /**
      * Plain text or SSML to be synthesized to speech.
-     * Refer to https://docs.sws.speechify.com/docs/api-limits for the input size limits.
-     * Emotion, Pitch and Speed Rate are configured in the ssml input, please refer to the ssml documentation for more information: https://docs.sws.speechify.com/docs/ssml#prosody
+     * Refer to https://docs.speechify.ai/docs/api-limits for the input size limits.
+     * Emotion, Pitch and Speed Rate are configured in the ssml input, please refer to the ssml documentation for more information: https://docs.speechify.ai/docs/ssml#prosody
      */
     input: string;
     /**
      * Language of the input. Follow the format of an ISO 639-1 language code and an ISO 3166-1 region code, separated by a hyphen, e.g. en-US.
-     * Please refer to the list of the supported languages and recommendations regarding this parameter: https://docs.sws.speechify.com/docs/language-support.
+     * Please refer to the list of the supported languages and recommendations regarding this parameter: https://docs.speechify.ai/docs/language-support.
      */
     language?: string;
     /** Model used for audio synthesis. `simba-base` and `simba-turbo` are deprecated. Use `simba-english` or `simba-multilingual` instead. */
