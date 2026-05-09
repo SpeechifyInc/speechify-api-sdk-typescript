@@ -115,7 +115,7 @@ export class Voices {
     /**
      * Create a personal (cloned) voice for the user
      *
-     * @param {Speechify.tts.VoicesCreateRequest} request
+     * @param {Speechify.tts.CreateVoicesRequest} request
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Speechify.tts.BadRequestError}
@@ -132,7 +132,7 @@ export class Voices {
      *     })
      */
     public async create(
-        request: Speechify.tts.VoicesCreateRequest,
+        request: Speechify.tts.CreateVoicesRequest,
         requestOptions?: Voices.RequestOptions,
     ): Promise<Speechify.tts.CreatedVoice> {
         const _request = await core.newFormData();
@@ -143,7 +143,7 @@ export class Voices {
 
         _request.append(
             "gender",
-            serializers.tts.VoicesCreateRequestGender.jsonOrThrow(request.gender, { unrecognizedObjectKeys: "strip" }),
+            serializers.tts.CreateVoicesRequestGender.jsonOrThrow(request.gender, { unrecognizedObjectKeys: "strip" }),
         );
         await _request.appendFile("sample", request.sample);
         if (request.avatar != null) {
@@ -225,6 +225,7 @@ export class Voices {
      * Delete a personal (cloned) voice
      *
      * @param {string} id - The ID of the voice to delete
+     * @param {Speechify.tts.DeleteVoicesRequest} request
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Speechify.tts.BadRequestError}
@@ -235,7 +236,11 @@ export class Voices {
      * @example
      *     await client.tts.voices.delete("id")
      */
-    public async delete(id: string, requestOptions?: Voices.RequestOptions): Promise<void> {
+    public async delete(
+        id: string,
+        request: Speechify.tts.DeleteVoicesRequest = {},
+        requestOptions?: Voices.RequestOptions,
+    ): Promise<void> {
         const _response = await core.fetcher({
             url: urlJoin(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -304,7 +309,11 @@ export class Voices {
      * @throws {@link Speechify.tts.NotFoundError}
      * @throws {@link Speechify.tts.InternalServerError}
      */
-    public async downloadSample(id: string, requestOptions?: Voices.RequestOptions): Promise<stream.Readable> {
+    public async downloadSample(
+        id: string,
+        request: Speechify.tts.DownloadSampleVoicesRequest = {},
+        requestOptions?: Voices.RequestOptions,
+    ): Promise<stream.Readable> {
         const _response = await core.fetcher<stream.Readable>({
             url: urlJoin(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -367,15 +376,12 @@ export class Voices {
         }
     }
 
-    protected async _getAuthorizationHeader(): Promise<string> {
+    protected async _getAuthorizationHeader(): Promise<string | undefined> {
         const bearer = (await core.Supplier.get(this._options.token)) ?? process?.env["SPEECHIFY_API_KEY"];
-        if (bearer == null) {
-            throw new errors.SpeechifyError({
-                message:
-                    "Please specify a bearer by either passing it in to the constructor or initializing a SPEECHIFY_API_KEY environment variable",
-            });
+        if (bearer != null) {
+            return `Bearer ${bearer}`;
         }
 
-        return `Bearer ${bearer}`;
+        return undefined;
     }
 }

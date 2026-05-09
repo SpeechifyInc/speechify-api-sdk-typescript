@@ -6,13 +6,14 @@ import * as serializers from "../../../index";
 import * as Speechify from "../../../../api/index";
 import * as core from "../../../../core";
 import { AccessTokenScope } from "./AccessTokenScope";
+import { AccessTokenTokenType } from "./AccessTokenTokenType";
 
 export const AccessToken: core.serialization.ObjectSchema<serializers.tts.AccessToken.Raw, Speechify.tts.AccessToken> =
     core.serialization.object({
         accessToken: core.serialization.property("access_token", core.serialization.string().optional()),
         expiresIn: core.serialization.property("expires_in", core.serialization.number().optional()),
         scope: AccessTokenScope.optional(),
-        tokenType: core.serialization.property("token_type", core.serialization.stringLiteral("bearer").optional()),
+        tokenType: core.serialization.property("token_type", AccessTokenTokenType.optional()),
     });
 
 export declare namespace AccessToken {
@@ -20,6 +21,6 @@ export declare namespace AccessToken {
         access_token?: string | null;
         expires_in?: number | null;
         scope?: AccessTokenScope.Raw | null;
-        token_type?: "bearer" | null;
+        token_type?: AccessTokenTokenType.Raw | null;
     }
 }

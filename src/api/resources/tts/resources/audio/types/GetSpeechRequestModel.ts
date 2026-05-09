@@ -3,7 +3,8 @@
  */
 
 /**
- * Model used for audio synthesis. `simba-base` and `simba-turbo` are deprecated. Use `simba-english` or `simba-multilingual` instead.
+ * Model used for audio synthesis. `simba-base` and `simba-turbo` are deprecated.
+ * `simba-3.0` is the new streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships.
  */
 export type GetSpeechRequestModel =
     /**
@@ -17,10 +18,14 @@ export type GetSpeechRequestModel =
     | "simba-multilingual"
     /**
      * simba-turbo is deprecated. Use simba-multilingual instead. */
-    | "simba-turbo";
+    | "simba-turbo"
+    /**
+     * simba-3.0 is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
+    | "simba-3.0";
 export const GetSpeechRequestModel = {
     SimbaBase: "simba-base",
     SimbaEnglish: "simba-english",
     SimbaMultilingual: "simba-multilingual",
     SimbaTurbo: "simba-turbo",
+    Simba30: "simba-3.0",
 } as const;

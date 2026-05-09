@@ -9,8 +9,8 @@ import * as core from "../../../../core";
 export const CreateVoiceModelName: core.serialization.Schema<
     serializers.tts.CreateVoiceModelName.Raw,
     Speechify.tts.CreateVoiceModelName
-> = core.serialization.enum_(["simba-base", "simba-english", "simba-multilingual", "simba-turbo"]);
+> = core.serialization.enum_(["simba-base", "simba-english", "simba-multilingual", "simba-turbo", "simba-3.0"]);
 
 export declare namespace CreateVoiceModelName {
-    export type Raw = "simba-base" | "simba-english" | "simba-multilingual" | "simba-turbo";
+    export type Raw = "simba-base" | "simba-english" | "simba-multilingual" | "simba-turbo" | "simba-3.0";
 }

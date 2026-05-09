@@ -1,1 +1,1 @@
-export * from "./VoicesCreateRequestGender";
+export * from "./CreateVoicesRequestGender";

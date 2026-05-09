@@ -11,5 +11,5 @@ export interface AccessToken {
     /** The scope, or a space-delimited list of scopes the token is issued for */
     scope?: Speechify.tts.AccessTokenScope;
     /** Token type */
-    tokenType?: "bearer";
+    tokenType?: Speechify.tts.AccessTokenTokenType;
 }

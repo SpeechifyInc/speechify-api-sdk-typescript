@@ -6,9 +6,13 @@ import * as Speechify from "../../../../../../index";
 
 /**
  * @example
- *     {}
+ *     {
+ *         grantType: "client_credentials"
+ *     }
  */
 export interface CreateAccessTokenRequest {
+    /** in: body */
+    grantType: Speechify.tts.CreateAccessTokenRequestGrantType;
     /**
      * The scope, or a space-delimited list of scopes the token is requested for
      * in: body

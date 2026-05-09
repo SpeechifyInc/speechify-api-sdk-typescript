@@ -42,7 +42,9 @@ export class Auth {
      * @throws {@link Speechify.tts.UnauthorizedError}
      *
      * @example
-     *     await client.tts.auth.createAccessToken({})
+     *     await client.tts.auth.createAccessToken({
+     *         grantType: "client_credentials"
+     *     })
      */
     public async createAccessToken(
         request: Speechify.tts.CreateAccessTokenRequest,
@@ -68,10 +70,7 @@ export class Auth {
             },
             contentType: "application/json",
             requestType: "json",
-            body: {
-                ...serializers.tts.CreateAccessTokenRequest.jsonOrThrow(request, { unrecognizedObjectKeys: "strip" }),
-                grant_type: "client_credentials",
-            },
+            body: serializers.tts.CreateAccessTokenRequest.jsonOrThrow(request, { unrecognizedObjectKeys: "strip" }),
             timeoutMs: requestOptions?.timeoutInSeconds != null ? requestOptions.timeoutInSeconds * 1000 : 60000,
             maxRetries: requestOptions?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -115,15 +114,12 @@ export class Auth {
         }
     }
 
-    protected async _getAuthorizationHeader(): Promise<string> {
+    protected async _getAuthorizationHeader(): Promise<string | undefined> {
         const bearer = (await core.Supplier.get(this._options.token)) ?? process?.env["SPEECHIFY_API_KEY"];
-        if (bearer == null) {
-            throw new errors.SpeechifyError({
-                message:
-                    "Please specify a bearer by either passing it in to the constructor or initializing a SPEECHIFY_API_KEY environment variable",
-            });
+        if (bearer != null) {
+            return `Bearer ${bearer}`;
         }
 
-        return `Bearer ${bearer}`;
+        return undefined;
     }
 }

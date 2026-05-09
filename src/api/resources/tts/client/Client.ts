@@ -7,6 +7,15 @@ import * as core from "../../../../core";
 import { Audio } from "../resources/audio/client/Client";
 import { Auth } from "../resources/auth/client/Client";
 import { Voices } from "../resources/voices/client/Client";
+import { Agents } from "../resources/agents/client/Client";
+import { Tools } from "../resources/tools/client/Client";
+import { Conversations } from "../resources/conversations/client/Client";
+import { KnowledgeBases } from "../resources/knowledgeBases/client/Client";
+import { Memories } from "../resources/memories/client/Client";
+import { PhoneNumbers } from "../resources/phoneNumbers/client/Client";
+import { SipTrunks } from "../resources/sipTrunks/client/Client";
+import { OutboundCalls } from "../resources/outboundCalls/client/Client";
+import { Workspaces } from "../resources/workspaces/client/Client";
 
 export declare namespace Tts {
     export interface Options {
@@ -21,6 +30,15 @@ export class Tts {
     protected _audio: Audio | undefined;
     protected _auth: Auth | undefined;
     protected _voices: Voices | undefined;
+    protected _agents: Agents | undefined;
+    protected _tools: Tools | undefined;
+    protected _conversations: Conversations | undefined;
+    protected _knowledgeBases: KnowledgeBases | undefined;
+    protected _memories: Memories | undefined;
+    protected _phoneNumbers: PhoneNumbers | undefined;
+    protected _sipTrunks: SipTrunks | undefined;
+    protected _outboundCalls: OutboundCalls | undefined;
+    protected _workspaces: Workspaces | undefined;
 
     constructor(protected readonly _options: Tts.Options = {}) {}
 
@@ -34,5 +52,41 @@ export class Tts {
 
     public get voices(): Voices {
         return (this._voices ??= new Voices(this._options));
+    }
+
+    public get agents(): Agents {
+        return (this._agents ??= new Agents(this._options));
+    }
+
+    public get tools(): Tools {
+        return (this._tools ??= new Tools(this._options));
+    }
+
+    public get conversations(): Conversations {
+        return (this._conversations ??= new Conversations(this._options));
+    }
+
+    public get knowledgeBases(): KnowledgeBases {
+        return (this._knowledgeBases ??= new KnowledgeBases(this._options));
+    }
+
+    public get memories(): Memories {
+        return (this._memories ??= new Memories(this._options));
+    }
+
+    public get phoneNumbers(): PhoneNumbers {
+        return (this._phoneNumbers ??= new PhoneNumbers(this._options));
+    }
+
+    public get sipTrunks(): SipTrunks {
+        return (this._sipTrunks ??= new SipTrunks(this._options));
+    }
+
+    public get outboundCalls(): OutboundCalls {
+        return (this._outboundCalls ??= new OutboundCalls(this._options));
+    }
+
+    public get workspaces(): Workspaces {
+        return (this._workspaces ??= new Workspaces(this._options));
     }
 }

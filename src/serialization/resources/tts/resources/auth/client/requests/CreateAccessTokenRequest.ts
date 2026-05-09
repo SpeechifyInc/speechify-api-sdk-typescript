@@ -5,17 +5,20 @@
 import * as serializers from "../../../../../../index";
 import * as Speechify from "../../../../../../../api/index";
 import * as core from "../../../../../../../core";
+import { CreateAccessTokenRequestGrantType } from "../../types/CreateAccessTokenRequestGrantType";
 import { CreateAccessTokenRequestScope } from "../../types/CreateAccessTokenRequestScope";
 
 export const CreateAccessTokenRequest: core.serialization.Schema<
     serializers.tts.CreateAccessTokenRequest.Raw,
     Speechify.tts.CreateAccessTokenRequest
 > = core.serialization.object({
+    grantType: core.serialization.property("grant_type", CreateAccessTokenRequestGrantType),
     scope: CreateAccessTokenRequestScope.optional(),
 });
 
 export declare namespace CreateAccessTokenRequest {
     export interface Raw {
+        grant_type: CreateAccessTokenRequestGrantType.Raw;
         scope?: CreateAccessTokenRequestScope.Raw | null;
     }
 }

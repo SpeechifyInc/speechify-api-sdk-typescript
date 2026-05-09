@@ -154,7 +154,7 @@ export class Audio {
                 "User-Agent": "@speechify/api/1.0.2",
                 "X-Fern-Runtime": core.RUNTIME.type,
                 "X-Fern-Runtime-Version": core.RUNTIME.version,
-                Accept: serializers.tts.AudioStreamRequestAccept.jsonOrThrow(accept, {
+                Accept: serializers.tts.StreamAudioRequestAccept.jsonOrThrow(accept, {
                     unrecognizedObjectKeys: "strip",
                 }),
                 ...requestOptions?.headers,
@@ -206,15 +206,12 @@ export class Audio {
         }
     }
 
-    protected async _getAuthorizationHeader(): Promise<string> {
+    protected async _getAuthorizationHeader(): Promise<string | undefined> {
         const bearer = (await core.Supplier.get(this._options.token)) ?? process?.env["SPEECHIFY_API_KEY"];
-        if (bearer == null) {
-            throw new errors.SpeechifyError({
-                message:
-                    "Please specify a bearer by either passing it in to the constructor or initializing a SPEECHIFY_API_KEY environment variable",
-            });
+        if (bearer != null) {
+            return `Bearer ${bearer}`;
         }
 
-        return `Bearer ${bearer}`;
+        return undefined;
     }
 }
