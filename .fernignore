@@ -1,2 +1,5 @@
 # Specify files that shouldn't be modified by Fern
 .github/workflows/ci.yml
+
+# ignore context7 config file
+context7.json
