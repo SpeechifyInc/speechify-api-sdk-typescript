@@ -5,6 +5,17 @@
     "repository": "https://github.com/speechifyinc/speechify-api-sdk-typescript",
     "main": "./index.js",
     "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./realtime": {
+            "types": "./realtime/index.d.ts",
+            "default": "./realtime/index.js"
+        },
+        "./package.json": "./package.json"
+    },
     "scripts": {
         "format": "prettier . --write --ignore-unknown",
         "build": "tsc",
