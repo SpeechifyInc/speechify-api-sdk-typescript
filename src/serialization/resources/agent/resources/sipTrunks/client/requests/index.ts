@@ -1,0 +1,1 @@
+export { CreateSipTrunkRequest } from "./CreateSipTrunkRequest";

@@ -7,7 +7,7 @@ import * as Speechify from "../../../../../../../api/index";
 import * as core from "../../../../../../../core";
 import { GetSpeechRequestAudioFormat } from "../../types/GetSpeechRequestAudioFormat";
 import { GetSpeechRequestModel } from "../../types/GetSpeechRequestModel";
-import { GetSpeechOptionsRequest } from "../../../../types/GetSpeechOptionsRequest";
+import { GetSpeechOptionsRequest } from "../../../../../../types/GetSpeechOptionsRequest";
 
 export const GetSpeechRequest: core.serialization.Schema<
     serializers.tts.GetSpeechRequest.Raw,

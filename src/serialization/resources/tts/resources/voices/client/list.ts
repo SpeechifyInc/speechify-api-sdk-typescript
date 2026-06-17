@@ -5,9 +5,9 @@
 import * as serializers from "../../../../../index";
 import * as Speechify from "../../../../../../api/index";
 import * as core from "../../../../../../core";
-import { GetVoice } from "../../../types/GetVoice";
+import { GetVoice } from "../../../../../types/GetVoice";
 
-export const Response: core.serialization.Schema<serializers.tts.voices.list.Response.Raw, Speechify.tts.GetVoice[]> =
+export const Response: core.serialization.Schema<serializers.tts.voices.list.Response.Raw, Speechify.GetVoice[]> =
     core.serialization.list(GetVoice);
 
 export declare namespace Response {

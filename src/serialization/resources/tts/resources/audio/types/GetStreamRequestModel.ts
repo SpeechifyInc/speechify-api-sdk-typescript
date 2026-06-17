@@ -9,8 +9,8 @@ import * as core from "../../../../../../core";
 export const GetStreamRequestModel: core.serialization.Schema<
     serializers.tts.GetStreamRequestModel.Raw,
     Speechify.tts.GetStreamRequestModel
-> = core.serialization.enum_(["simba-base", "simba-english", "simba-multilingual", "simba-turbo", "simba-3.0"]);
+> = core.serialization.enum_(["simba-english", "simba-multilingual", "simba-3.0"]);
 
 export declare namespace GetStreamRequestModel {
-    export type Raw = "simba-base" | "simba-english" | "simba-multilingual" | "simba-turbo" | "simba-3.0";
+    export type Raw = "simba-english" | "simba-multilingual" | "simba-3.0";
 }

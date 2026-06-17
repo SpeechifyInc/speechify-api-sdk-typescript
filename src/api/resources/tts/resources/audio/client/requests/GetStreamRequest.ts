@@ -28,12 +28,9 @@ export interface GetStreamRequest {
      * Please refer to the list of the supported languages and recommendations regarding this parameter: https://docs.speechify.ai/docs/language-support.
      */
     language?: string;
-    /**
-     * Model used for audio synthesis. `simba-base` and `simba-turbo` are deprecated.
-     * `simba-3.0` is the new streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships.
-     */
+    /** Model used for audio synthesis. `simba-english` is optimized for English, `simba-multilingual` for non-English or mixed input. `simba-3.0` is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
     model?: Speechify.tts.GetStreamRequestModel;
-    options?: Speechify.tts.GetStreamOptionsRequest;
+    options?: Speechify.GetStreamOptionsRequest;
     /** Id of the voice to be used for synthesizing speech. Refer to /v1/voices endpoint for available voices */
     voiceId: string;
 }

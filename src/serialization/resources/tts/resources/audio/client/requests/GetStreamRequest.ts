@@ -6,7 +6,7 @@ import * as serializers from "../../../../../../index";
 import * as Speechify from "../../../../../../../api/index";
 import * as core from "../../../../../../../core";
 import { GetStreamRequestModel } from "../../types/GetStreamRequestModel";
-import { GetStreamOptionsRequest } from "../../../../types/GetStreamOptionsRequest";
+import { GetStreamOptionsRequest } from "../../../../../../types/GetStreamOptionsRequest";
 
 export const GetStreamRequest: core.serialization.Schema<
     serializers.tts.GetStreamRequest.Raw,

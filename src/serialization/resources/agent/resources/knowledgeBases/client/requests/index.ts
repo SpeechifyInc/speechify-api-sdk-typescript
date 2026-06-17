@@ -1,0 +1,14 @@
+export { CreateKnowledgeBaseRequest } from "./CreateKnowledgeBaseRequest";
+export { UpdateKnowledgeBaseRequest } from "./UpdateKnowledgeBaseRequest";
+export { UpdateDocumentKnowledgeBasesRequest } from "./UpdateDocumentKnowledgeBasesRequest";
+export { CreateTextDocumentRequest } from "./CreateTextDocumentRequest";
+export { CreateUrlDocumentRequest } from "./CreateUrlDocumentRequest";
+export { CreateSitemapImportRequest } from "./CreateSitemapImportRequest";
+export { CreateCrawlImportRequest } from "./CreateCrawlImportRequest";
+export { CreateUrlBatchImportRequest } from "./CreateUrlBatchImportRequest";
+export { BatchDeleteDocumentsRequest } from "./BatchDeleteDocumentsRequest";
+export { BatchMoveDocumentsRequest } from "./BatchMoveDocumentsRequest";
+export { UpdateRefreshConfigRequest } from "./UpdateRefreshConfigRequest";
+export { CreateFolderRequest } from "./CreateFolderRequest";
+export { UpdateFolderRequest } from "./UpdateFolderRequest";
+export { SearchKnowledgeBasesRequest } from "./SearchKnowledgeBasesRequest";
