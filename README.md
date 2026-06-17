@@ -13,6 +13,7 @@ The Speechifyinc TypeScript library provides convenient access to the Speechifyi
 - [Usage](#usage)
 - [Request and Response Types](#request-and-response-types)
 - [Exception Handling](#exception-handling)
+- [Pagination](#pagination)
 - [Advanced](#advanced)
     - [Additional Headers](#additional-headers)
     - [Retries](#retries)
@@ -43,8 +44,10 @@ Instantiate and use the client with the following:
 import { SpeechifyClient } from "@speechify/api";
 
 const client = new SpeechifyClient({ token: "YOUR_TOKEN" });
-await client.tts.audio.speech({
-    input: "input",
+await client.agent.create({
+    name: "name",
+    prompt: "prompt",
+    firstMessage: "first_message",
     voiceId: "voice_id",
 });
 ```
@@ -57,7 +60,7 @@ following namespace:
 ```typescript
 import { Speechify } from "@speechify/api";
 
-const request: Speechify.GetSpeechRequest = {
+const request: Speechify.CreateAgentRequest = {
     ...
 };
 ```
@@ -71,13 +74,33 @@ will be thrown.
 import { SpeechifyError } from "@speechify/api";
 
 try {
-    await client.tts.audio.speech(...);
+    await client.agent.create(...);
 } catch (err) {
     if (err instanceof SpeechifyError) {
         console.log(err.statusCode);
         console.log(err.message);
         console.log(err.body);
     }
+}
+```
+
+## Pagination
+
+List endpoints are paginated. The SDK provides an iterator so that you can simply loop over the items:
+
+```typescript
+import { SpeechifyClient } from "@speechify/api";
+
+const client = new SpeechifyClient({ token: "YOUR_TOKEN" });
+const response = await client.agent.tools.list();
+for await (const item of response) {
+    console.log(item);
+}
+
+// Or you can manually iterate page-by-page
+const page = await client.agent.tools.list();
+while (page.hasNextPage()) {
+    page = page.getNextPage();
 }
 ```
 
@@ -88,7 +111,7 @@ try {
 If you would like to send additional headers as part of the request, use the `headers` request option.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+const response = await client.agent.create(..., {
     headers: {
         'X-Custom-Header': 'custom value'
     }
@@ -110,7 +133,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+const response = await client.agent.create(..., {
     maxRetries: 0 // override maxRetries at the request level
 });
 ```
@@ -120,7 +143,7 @@ const response = await client.tts.audio.speech(..., {
 The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+const response = await client.agent.create(..., {
     timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
@@ -131,7 +154,7 @@ The SDK allows users to abort requests at any point by passing in an abort signa
 
 ```typescript
 const controller = new AbortController();
-const response = await client.tts.audio.speech(..., {
+const response = await client.agent.create(..., {
     abortSignal: controller.signal
 });
 controller.abort(); // aborts the request

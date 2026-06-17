@@ -4,6 +4,7 @@
 
 import * as environments from "./environments";
 import * as core from "./core";
+import { Agent } from "./api/resources/agent/client/Client";
 import { Tts } from "./api/resources/tts/client/Client";
 
 export declare namespace SpeechifyClient {
@@ -27,9 +28,14 @@ export declare namespace SpeechifyClient {
 }
 
 export class SpeechifyClient {
+    protected _agent: Agent | undefined;
     protected _tts: Tts | undefined;
 
     constructor(protected readonly _options: SpeechifyClient.Options = {}) {}
+
+    public get agent(): Agent {
+        return (this._agent ??= new Agent(this._options));
+    }
 
     public get tts(): Tts {
         return (this._tts ??= new Tts(this._options));

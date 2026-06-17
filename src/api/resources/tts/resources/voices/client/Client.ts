@@ -39,14 +39,15 @@ export class Voices {
      *
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Speechify.tts.UnauthorizedError}
-     * @throws {@link Speechify.tts.NotFoundError}
-     * @throws {@link Speechify.tts.InternalServerError}
+     * @throws {@link Speechify.UnauthorizedError}
+     * @throws {@link Speechify.ForbiddenError}
+     * @throws {@link Speechify.TooManyRequestsError}
+     * @throws {@link Speechify.InternalServerError}
      *
      * @example
      *     await client.tts.voices.list()
      */
-    public async list(requestOptions?: Voices.RequestOptions): Promise<Speechify.tts.GetVoice[]> {
+    public async list(requestOptions?: Voices.RequestOptions): Promise<Speechify.GetVoice[]> {
         const _response = await core.fetcher({
             url: urlJoin(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -84,11 +85,37 @@ export class Voices {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 401:
-                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
-                case 404:
-                    throw new Speechify.tts.NotFoundError(_response.error.body);
+                    throw new Speechify.UnauthorizedError(_response.error.body);
+                case 403:
+                    throw new Speechify.ForbiddenError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 429:
+                    throw new Speechify.TooManyRequestsError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 500:
-                    throw new Speechify.tts.InternalServerError(_response.error.body);
+                    throw new Speechify.InternalServerError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 default:
                     throw new errors.SpeechifyError({
                         statusCode: _response.error.statusCode,
@@ -118,10 +145,15 @@ export class Voices {
      * @param {Speechify.tts.CreateVoicesRequest} request
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Speechify.tts.BadRequestError}
-     * @throws {@link Speechify.tts.UnauthorizedError}
-     * @throws {@link Speechify.tts.PaymentRequiredError}
-     * @throws {@link Speechify.tts.InternalServerError}
+     * @throws {@link Speechify.BadRequestError}
+     * @throws {@link Speechify.UnauthorizedError}
+     * @throws {@link Speechify.PaymentRequiredError}
+     * @throws {@link Speechify.ForbiddenError}
+     * @throws {@link Speechify.UnprocessableEntityError}
+     * @throws {@link Speechify.TooManyRequestsError}
+     * @throws {@link Speechify.InternalServerError}
+     * @throws {@link Speechify.BadGatewayError}
+     * @throws {@link Speechify.ServiceUnavailableError}
      *
      * @example
      *     await client.tts.voices.create({
@@ -134,7 +166,7 @@ export class Voices {
     public async create(
         request: Speechify.tts.CreateVoicesRequest,
         requestOptions?: Voices.RequestOptions,
-    ): Promise<Speechify.tts.CreatedVoice> {
+    ): Promise<Speechify.CreatedVoice> {
         const _request = await core.newFormData();
         _request.append("name", request.name);
         if (request.locale != null) {
@@ -179,7 +211,7 @@ export class Voices {
             abortSignal: requestOptions?.abortSignal,
         });
         if (_response.ok) {
-            return serializers.tts.CreatedVoice.parseOrThrow(_response.body, {
+            return serializers.CreatedVoice.parseOrThrow(_response.body, {
                 unrecognizedObjectKeys: "passthrough",
                 allowUnrecognizedUnionMembers: true,
                 allowUnrecognizedEnumValues: true,
@@ -191,13 +223,79 @@ export class Voices {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Speechify.tts.BadRequestError(_response.error.body);
+                    throw new Speechify.BadRequestError(_response.error.body);
                 case 401:
-                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
+                    throw new Speechify.UnauthorizedError(_response.error.body);
                 case 402:
-                    throw new Speechify.tts.PaymentRequiredError(_response.error.body);
+                    throw new Speechify.PaymentRequiredError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 403:
+                    throw new Speechify.ForbiddenError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 422:
+                    throw new Speechify.UnprocessableEntityError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 429:
+                    throw new Speechify.TooManyRequestsError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 500:
-                    throw new Speechify.tts.InternalServerError(_response.error.body);
+                    throw new Speechify.InternalServerError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 502:
+                    throw new Speechify.BadGatewayError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 503:
+                    throw new Speechify.ServiceUnavailableError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 default:
                     throw new errors.SpeechifyError({
                         statusCode: _response.error.statusCode,
@@ -228,10 +326,14 @@ export class Voices {
      * @param {Speechify.tts.DeleteVoicesRequest} request
      * @param {Voices.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Speechify.tts.BadRequestError}
-     * @throws {@link Speechify.tts.UnauthorizedError}
-     * @throws {@link Speechify.tts.NotFoundError}
-     * @throws {@link Speechify.tts.InternalServerError}
+     * @throws {@link Speechify.BadRequestError}
+     * @throws {@link Speechify.UnauthorizedError}
+     * @throws {@link Speechify.ForbiddenError}
+     * @throws {@link Speechify.NotFoundError}
+     * @throws {@link Speechify.TooManyRequestsError}
+     * @throws {@link Speechify.InternalServerError}
+     * @throws {@link Speechify.BadGatewayError}
+     * @throws {@link Speechify.ServiceUnavailableError}
      *
      * @example
      *     await client.tts.voices.delete("id")
@@ -272,13 +374,61 @@ export class Voices {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Speechify.tts.BadRequestError(_response.error.body);
+                    throw new Speechify.BadRequestError(_response.error.body);
                 case 401:
-                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
+                    throw new Speechify.UnauthorizedError(_response.error.body);
+                case 403:
+                    throw new Speechify.ForbiddenError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 404:
-                    throw new Speechify.tts.NotFoundError(_response.error.body);
+                    throw new Speechify.NotFoundError(_response.error.body);
+                case 429:
+                    throw new Speechify.TooManyRequestsError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 500:
-                    throw new Speechify.tts.InternalServerError(_response.error.body);
+                    throw new Speechify.InternalServerError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 502:
+                    throw new Speechify.BadGatewayError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 503:
+                    throw new Speechify.ServiceUnavailableError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 default:
                     throw new errors.SpeechifyError({
                         statusCode: _response.error.statusCode,
@@ -304,10 +454,14 @@ export class Voices {
 
     /**
      * Download a personal (cloned) voice sample
-     * @throws {@link Speechify.tts.BadRequestError}
-     * @throws {@link Speechify.tts.UnauthorizedError}
-     * @throws {@link Speechify.tts.NotFoundError}
-     * @throws {@link Speechify.tts.InternalServerError}
+     * @throws {@link Speechify.BadRequestError}
+     * @throws {@link Speechify.UnauthorizedError}
+     * @throws {@link Speechify.ForbiddenError}
+     * @throws {@link Speechify.NotFoundError}
+     * @throws {@link Speechify.TooManyRequestsError}
+     * @throws {@link Speechify.InternalServerError}
+     * @throws {@link Speechify.BadGatewayError}
+     * @throws {@link Speechify.ServiceUnavailableError}
      */
     public async downloadSample(
         id: string,
@@ -346,13 +500,61 @@ export class Voices {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Speechify.tts.BadRequestError(_response.error.body);
+                    throw new Speechify.BadRequestError(_response.error.body);
                 case 401:
-                    throw new Speechify.tts.UnauthorizedError(_response.error.body);
+                    throw new Speechify.UnauthorizedError(_response.error.body);
+                case 403:
+                    throw new Speechify.ForbiddenError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 404:
-                    throw new Speechify.tts.NotFoundError(_response.error.body);
+                    throw new Speechify.NotFoundError(_response.error.body);
+                case 429:
+                    throw new Speechify.TooManyRequestsError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 case 500:
-                    throw new Speechify.tts.InternalServerError(_response.error.body);
+                    throw new Speechify.InternalServerError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 502:
+                    throw new Speechify.BadGatewayError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
+                case 503:
+                    throw new Speechify.ServiceUnavailableError(
+                        serializers.Error_.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                    );
                 default:
                     throw new errors.SpeechifyError({
                         statusCode: _response.error.statusCode,

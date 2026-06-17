@@ -3,3 +3,6 @@
 
 # ignore context7 config file
 context7.json
+.fern/replay.lock
+.fern/replay.yml
+.gitattributes
