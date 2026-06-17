@@ -6,3 +6,6 @@ context7.json
 .fern/replay.lock
 .fern/replay.yml
 .gitattributes
+
+# hand-written realtime connect layer (do not regenerate)
+src/realtime/
