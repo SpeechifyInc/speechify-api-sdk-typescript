@@ -1,6 +1,6 @@
 {
     "name": "@speechify/api",
-    "version": "1.0.2",
+    "version": "1.0.1",
     "private": false,
     "repository": "https://github.com/speechifyinc/speechify-api-sdk-typescript",
     "main": "./index.js",

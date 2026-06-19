@@ -1,5 +1,19 @@
 # Specify files that shouldn't be modified by Fern
+
+# Legacy CI workflow replaced by release-please.yml — keep listed so Fern
+# does not regenerate the file after deletion.
 .github/workflows/ci.yml
+
+# Release-please owns versioning, releases, and npm publish.
+.github/workflows/release-please.yml
+release-please-config.json
+.release-please-manifest.json
+CHANGELOG.md
+
+# release-please bumps the SDK_VERSION literal in this file via an inline
+# `x-release-please-version` marker comment. Fern regen would strip the
+# marker, so the file is owned outside of Fern.
+src/version.ts
 
 # ignore context7 config file
 context7.json
