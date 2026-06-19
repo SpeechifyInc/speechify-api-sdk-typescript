@@ -10,10 +10,5 @@ release-please-config.json
 .release-please-manifest.json
 CHANGELOG.md
 
-# release-please bumps the SDK_VERSION literal in this file via an inline
-# `x-release-please-version` marker comment. Fern regen would strip the
-# marker, so the file is owned outside of Fern.
-src/version.ts
-
 # ignore context7 config file
 context7.json
