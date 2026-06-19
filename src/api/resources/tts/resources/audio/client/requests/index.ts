@@ -1,2 +1,2 @@
-export { type GetSpeechRequest } from "./GetSpeechRequest";
-export { type GetStreamRequest } from "./GetStreamRequest";
+export { GetSpeechRequest } from "./GetSpeechRequest.js";
+export { GetStreamRequest } from "./GetStreamRequest.js";

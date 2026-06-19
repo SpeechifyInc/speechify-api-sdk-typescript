@@ -1,1 +1,1 @@
-export * as tts from "./tts";
+export * as tts from "./tts/index.js";

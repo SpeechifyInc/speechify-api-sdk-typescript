@@ -1,2 +1,2 @@
-export { SpeechifyError } from "./SpeechifyError";
-export { SpeechifyTimeoutError } from "./SpeechifyTimeoutError";
+export { SpeechifyError } from "./SpeechifyError.js";
+export { SpeechifyTimeoutError } from "./SpeechifyTimeoutError.js";
