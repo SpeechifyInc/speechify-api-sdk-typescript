@@ -29,8 +29,8 @@ export class AudioClient {
 
     /**
      * Synthesize speech audio from text or SSML. Returns the complete audio
-     * file plus billing and speech-mark metadata in a single response. For
-     * low-latency playback or long-form text, use POST /v1/audio/stream.
+     * file plus billing and speech-mark metadata in a single JSON response.
+     * For low-latency playback or long-form text, use POST /v1/audio/stream.
      *
      * @param {Speechify.GetSpeechRequest} request
      * @param {AudioClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -142,8 +142,9 @@ export class AudioClient {
 
     /**
      * Synthesize speech and stream the audio back as it is generated, for
-     * low-latency playback. The Accept header selects the audio container.
-     * For short text where receiving the whole file at once is fine, use
+     * low-latency playback. The Accept header selects the audio container;
+     * the response is raw audio bytes (HTTP chunked). For Base64-encoded
+     * audio with speech-mark metadata in a single JSON response, use
      * POST /v1/audio/speech.
      *
      * @throws {@link Speechify.BadRequestError}
