@@ -11,14 +11,22 @@ The Speechifyinc TypeScript library provides convenient access to the Speechifyi
 - [Installation](#installation)
 - [Reference](#reference)
 - [Usage](#usage)
+- [Environments](#environments)
 - [Request and Response Types](#request-and-response-types)
 - [Exception Handling](#exception-handling)
+- [File Uploads](#file-uploads)
+- [Binary Response](#binary-response)
 - [Advanced](#advanced)
-    - [Additional Headers](#additional-headers)
-    - [Retries](#retries)
-    - [Timeouts](#timeouts)
-    - [Aborting Requests](#aborting-requests)
-    - [Runtime Compatibility](#runtime-compatibility)
+  - [Subpackage Exports](#subpackage-exports)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query String Parameters](#additional-query-string-parameters)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Aborting Requests](#aborting-requests)
+  - [Access Raw Response Data](#access-raw-response-data)
+  - [Logging](#logging)
+  - [Custom Fetch](#custom-fetch)
+  - [Runtime Compatibility](#runtime-compatibility)
 - [Contributing](#contributing)
 
 ## Documentation
@@ -42,10 +50,24 @@ Instantiate and use the client with the following:
 ```typescript
 import { SpeechifyClient } from "@speechify/api";
 
-const client = new SpeechifyClient({ token: "YOUR_TOKEN" });
-await client.tts.audio.speech({
-    input: "input",
-    voiceId: "voice_id",
+const client = new SpeechifyClient({ apiKey: "YOUR_API_KEY" });
+await client.audio.speech({
+    audio_format: "mp3",
+    input: "Hello! This is the Speechify text-to-speech API.",
+    model: "simba-english",
+    voice_id: "george"
+});
+```
+
+## Environments
+
+This SDK allows you to configure different environments for API requests.
+
+```typescript
+import { SpeechifyClient, SpeechifyEnvironment } from "@speechify/api";
+
+const client = new SpeechifyClient({
+    environment: SpeechifyEnvironment.Default,
 });
 ```
 
@@ -71,26 +93,494 @@ will be thrown.
 import { SpeechifyError } from "@speechify/api";
 
 try {
-    await client.tts.audio.speech(...);
+    await client.audio.speech(...);
 } catch (err) {
     if (err instanceof SpeechifyError) {
         console.log(err.statusCode);
         console.log(err.message);
         console.log(err.body);
+        console.log(err.rawResponse);
     }
 }
 ```
 
+## File Uploads
+
+You can upload files using the client:
+
+```typescript
+import { createReadStream } from "fs";
+import * as fs from "fs";
+import { SpeechifyClient } from "@speechify/api";
+
+const client = new SpeechifyClient({ apiKey: "YOUR_API_KEY" });
+await client.voices.create({
+    sample: fs.createReadStream("/path/to/your/file"),
+    name: "name",
+    gender: "male",
+    consent: "consent"
+});
+```
+The client accepts a variety of types for file upload parameters:
+* Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
+* Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
+
+### Metadata
+
+You can configure metadata when uploading a file:
+```typescript
+const file: Uploadable.WithMetadata = {
+    data: createReadStream("path/to/file"),
+    filename: "my-file",       // optional
+    contentType: "audio/mpeg", // optional
+    contentLength: 1949,       // optional
+};
+```
+
+Alternatively, you can upload a file directly from a file path:
+```typescript
+const file : Uploadable.FromPath = {
+    path: "path/to/file",
+    filename: "my-file",        // optional
+    contentType: "audio/mpeg",  // optional
+    contentLength: 1949,        // optional
+};
+```
+
+The metadata is used to set the `Content-Length`, `Content-Type`, and `Content-Disposition` headers. If not provided, the client will attempt to determine them automatically.
+For example, `fs.ReadStream` has a `path` property which the SDK uses to retrieve the file size from the filesystem without loading it into memory.
+
+
+## Binary Response
+
+You can consume binary data from endpoints using the `BinaryResponse` type which lets you choose how to consume the data:
+
+```typescript
+const response = await client.audio.stream(...);
+const stream: ReadableStream<Uint8Array> = response.stream();
+// const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
+// const blob: Blob = response.blob();
+// const bytes: Uint8Array = response.bytes();
+// You can only use the response body once, so you must choose one of the above methods.
+// If you want to check if the response body has been used, you can use the following property.
+const bodyUsed = response.bodyUsed;
+```
+<details>
+<summary>Save binary response to a file</summary>
+
+<blockquote>
+<details>
+<summary>Node.js</summary>
+
+<blockquote>
+<details>
+<summary>ReadableStream (most-efficient)</summary>
+
+```ts
+import { createWriteStream } from 'fs';
+import { Readable } from 'stream';
+import { pipeline } from 'stream/promises';
+
+const response = await client.audio.stream(...);
+
+const stream = response.stream();
+const nodeStream = Readable.fromWeb(stream);
+const writeStream = createWriteStream('path/to/file');
+
+await pipeline(nodeStream, writeStream);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ArrayBuffer</summary>
+
+```ts
+import { writeFile } from 'fs/promises';
+
+const response = await client.audio.stream(...);
+
+const arrayBuffer = await response.arrayBuffer();
+await writeFile('path/to/file', Buffer.from(arrayBuffer));
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Blob</summary>
+
+```ts
+import { writeFile } from 'fs/promises';
+
+const response = await client.audio.stream(...);
+
+const blob = await response.blob();
+const arrayBuffer = await blob.arrayBuffer();
+await writeFile('output.bin', Buffer.from(arrayBuffer));
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bytes (UIntArray8)</summary>
+
+```ts
+import { writeFile } from 'fs/promises';
+
+const response = await client.audio.stream(...);
+
+const bytes = await response.bytes();
+await writeFile('path/to/file', bytes);
+```
+
+</details>
+</blockquote>
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bun</summary>
+
+<blockquote>
+<details>
+<summary>ReadableStream (most-efficient)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const stream = response.stream();
+await Bun.write('path/to/file', stream);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ArrayBuffer</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const arrayBuffer = await response.arrayBuffer();
+await Bun.write('path/to/file', arrayBuffer);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Blob</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const blob = await response.blob();
+await Bun.write('path/to/file', blob);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bytes (UIntArray8)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const bytes = await response.bytes();
+await Bun.write('path/to/file', bytes);
+```
+
+</details>
+</blockquote>
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Deno</summary>
+
+<blockquote>
+<details>
+<summary>ReadableStream (most-efficient)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const stream = response.stream();
+const file = await Deno.open('path/to/file', { write: true, create: true });
+await stream.pipeTo(file.writable);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ArrayBuffer</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const arrayBuffer = await response.arrayBuffer();
+await Deno.writeFile('path/to/file', new Uint8Array(arrayBuffer));
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Blob</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const blob = await response.blob();
+const arrayBuffer = await blob.arrayBuffer();
+await Deno.writeFile('path/to/file', new Uint8Array(arrayBuffer));
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bytes (UIntArray8)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const bytes = await response.bytes();
+await Deno.writeFile('path/to/file', bytes);
+```
+
+</details>
+</blockquote>
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Browser</summary>
+
+<blockquote>
+<details>
+<summary>Blob (most-efficient)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const blob = await response.blob();
+const url = URL.createObjectURL(blob);
+
+// trigger download
+const a = document.createElement('a');
+a.href = url;
+a.download = 'filename';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ReadableStream</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const stream = response.stream();
+const reader = stream.getReader();
+const chunks = [];
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  chunks.push(value);
+}
+
+const blob = new Blob(chunks);
+const url = URL.createObjectURL(blob);
+
+// trigger download
+const a = document.createElement('a');
+a.href = url;
+a.download = 'filename';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ArrayBuffer</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const arrayBuffer = await response.arrayBuffer();
+const blob = new Blob([arrayBuffer]);
+const url = URL.createObjectURL(blob);
+
+// trigger download
+const a = document.createElement('a');
+a.href = url;
+a.download = 'filename';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bytes (UIntArray8)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const bytes = await response.bytes();
+const blob = new Blob([bytes]);
+const url = URL.createObjectURL(blob);
+
+// trigger download
+const a = document.createElement('a');
+a.href = url;
+a.download = 'filename';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+</details>
+</blockquote>
+
+</details>
+</blockquote>
+
+</details>
+</blockquote>
+
+<details>
+<summary>Convert binary response to text</summary>
+
+<blockquote>
+<details>
+<summary>ReadableStream</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const stream = response.stream();
+const text = await new Response(stream).text();
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>ArrayBuffer</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const arrayBuffer = await response.arrayBuffer();
+const text = new TextDecoder().decode(arrayBuffer);
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Blob</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const blob = await response.blob();
+const text = await blob.text();
+```
+
+</details>
+</blockquote>
+
+<blockquote>
+<details>
+<summary>Bytes (UIntArray8)</summary>
+
+```ts
+const response = await client.audio.stream(...);
+
+const bytes = await response.bytes();
+const text = new TextDecoder().decode(bytes);
+```
+
+</details>
+</blockquote>
+
+</details>
+
 ## Advanced
+
+### Subpackage Exports
+
+This SDK supports direct imports of subpackage clients, which allows JavaScript bundlers to tree-shake and include only the imported subpackage code. This results in much smaller bundle sizes.
+
+```typescript
+import { AudioClient } from '@speechify/api/audio';
+
+const client = new AudioClient({...});
+```
 
 ### Additional Headers
 
 If you would like to send additional headers as part of the request, use the `headers` request option.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+import { SpeechifyClient } from "@speechify/api";
+
+const client = new SpeechifyClient({
+    ...
     headers: {
         'X-Custom-Header': 'custom value'
+    }
+});
+
+const response = await client.audio.speech(..., {
+    headers: {
+        'X-Custom-Header': 'custom value'
+    }
+});
+```
+
+### Additional Query String Parameters
+
+If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
+
+```typescript
+const response = await client.audio.speech(..., {
+    queryParams: {
+        'customQueryParamKey': 'custom query param value'
     }
 });
 ```
@@ -101,16 +591,24 @@ The SDK is instrumented with automatic retries with exponential backoff. A reque
 as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
 retry limit (default: 2).
 
-A request is deemed retryable when any of the following HTTP status codes is returned:
+Which status codes are retried depends on the `retryStatusCodes` generator configuration:
 
+**`legacy`** (current default): retries on
 - [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
 - [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
-- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Internal Server Errors)
+- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses) (All server errors, including 500)
+
+**`recommended`**: retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502) (Bad Gateway)
+- [503](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503) (Service Unavailable)
+- [504](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504) (Gateway Timeout)
 
 Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+const response = await client.audio.speech(..., {
     maxRetries: 0 // override maxRetries at the request level
 });
 ```
@@ -120,7 +618,7 @@ const response = await client.tts.audio.speech(..., {
 The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
 ```typescript
-const response = await client.tts.audio.speech(..., {
+const response = await client.audio.speech(..., {
     timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
@@ -131,16 +629,113 @@ The SDK allows users to abort requests at any point by passing in an abort signa
 
 ```typescript
 const controller = new AbortController();
-const response = await client.tts.audio.speech(..., {
+const response = await client.audio.speech(..., {
     abortSignal: controller.signal
 });
 controller.abort(); // aborts the request
 ```
 
+### Access Raw Response Data
+
+The SDK provides access to raw response data, including headers, through the `.withRawResponse()` method.
+The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
+
+```typescript
+const { data, rawResponse } = await client.audio.speech(...).withRawResponse();
+
+console.log(data);
+console.log(rawResponse.headers['X-My-Header']);
+```
+
+### Logging
+
+The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
+
+```typescript
+import { SpeechifyClient, logging } from "@speechify/api";
+
+const client = new SpeechifyClient({
+    ...
+    logging: {
+        level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
+        logger: new logging.ConsoleLogger(), // defaults to ConsoleLogger
+        silent: false, // defaults to true, set to false to enable logging
+    }
+});
+```
+The `logging` object can have the following properties:
+- `level`: The log level to use. Defaults to `logging.LogLevel.Info`.
+- `logger`: The logger to use. Defaults to a `logging.ConsoleLogger`.
+- `silent`: Whether to silence the logger. Defaults to `true`.
+
+The `level` property can be one of the following values:
+- `logging.LogLevel.Debug`
+- `logging.LogLevel.Info`
+- `logging.LogLevel.Warn`
+- `logging.LogLevel.Error`
+
+To provide a custom logger, you can pass in an object that implements the `logging.ILogger` interface.
+
+<details>
+<summary>Custom logger examples</summary>
+
+Here's an example using the popular `winston` logging library.
+```ts
+import winston from 'winston';
+
+const winstonLogger = winston.createLogger({...});
+
+const logger: logging.ILogger = {
+    debug: (msg, ...args) => winstonLogger.debug(msg, ...args),
+    info: (msg, ...args) => winstonLogger.info(msg, ...args),
+    warn: (msg, ...args) => winstonLogger.warn(msg, ...args),
+    error: (msg, ...args) => winstonLogger.error(msg, ...args),
+};
+```
+
+Here's an example using the popular `pino` logging library.
+
+```ts
+import pino from 'pino';
+
+const pinoLogger = pino({...});
+
+const logger: logging.ILogger = {
+  debug: (msg, ...args) => pinoLogger.debug(args, msg),
+  info: (msg, ...args) => pinoLogger.info(args, msg),
+  warn: (msg, ...args) => pinoLogger.warn(args, msg),
+  error: (msg, ...args) => pinoLogger.error(args, msg),
+};
+```
+</details>
+
+
+### Custom Fetch
+
+The SDK provides a low-level `fetch` method for making custom HTTP requests while still
+benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
+This is useful for calling API endpoints not yet supported in the SDK.
+
+```typescript
+const response = await client.fetch("/v1/custom/endpoint", {
+    method: "GET",
+}, {
+    timeoutInSeconds: 30,
+    maxRetries: 3,
+    headers: {
+        "X-Custom-Header": "custom-value",
+    },
+});
+
+const data = await response.json();
+```
+
 ### Runtime Compatibility
 
-The SDK defaults to `node-fetch` but will use the global fetch client if present. The SDK works in the following
-runtimes:
+
+The SDK works in the following runtimes:
+
+
 
 - Node.js 18+
 - Vercel
@@ -149,19 +744,6 @@ runtimes:
 - Bun 1.0+
 - React Native
 
-### Customizing Fetch Client
-
-The SDK provides a way for your to customize the underlying HTTP client / Fetch function. If you're running in an
-unsupported environment, this provides a way for you to break glass and ensure the SDK works.
-
-```typescript
-import { SpeechifyClient } from "@speechify/api";
-
-const client = new SpeechifyClient({
-    ...
-    fetcher: // provide your implementation here
-});
-```
 
 ## Contributing
 

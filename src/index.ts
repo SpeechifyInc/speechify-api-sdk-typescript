@@ -1,5 +1,6 @@
-export * as Speechify from "./api";
-export { SpeechifyClient } from "./Client";
-export { SpeechifyEnvironment } from "./environments";
-export { SpeechifyError, SpeechifyTimeoutError } from "./errors";
-export * as serialization from "./serialization";
+export * as Speechify from "./api/index.js";
+export type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
+export { SpeechifyClient } from "./Client.js";
+export { SpeechifyEnvironment } from "./environments.js";
+export { SpeechifyError, SpeechifyTimeoutError } from "./errors/index.js";
+export * from "./exports.js";

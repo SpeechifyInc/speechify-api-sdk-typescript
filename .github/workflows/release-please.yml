@@ -19,8 +19,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
+      - name: Enable corepack
+        run: corepack enable
       - name: Compile
-        run: yarn && yarn build
+        run: pnpm install --frozen-lockfile && pnpm build
 
   test:
     runs-on: ubuntu-latest
@@ -31,8 +33,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
+      - name: Enable corepack
+        run: corepack enable
       - name: Test
-        run: yarn && yarn test
+        run: pnpm install --frozen-lockfile && pnpm test
 
   release-please:
     needs: [compile, test]
@@ -68,10 +72,12 @@ jobs:
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
+      - name: Enable corepack
+        run: corepack enable
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install --frozen-lockfile
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Publish to npm
         env:
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
