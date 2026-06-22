@@ -22,38 +22,27 @@
             },
             "default": "./dist/cjs/index.js"
         },
-        "./tts": {
+        "./audio": {
             "import": {
-                "types": "./dist/esm/api/resources/tts/exports.d.mts",
-                "default": "./dist/esm/api/resources/tts/exports.mjs"
+                "types": "./dist/esm/api/resources/audio/exports.d.mts",
+                "default": "./dist/esm/api/resources/audio/exports.mjs"
             },
             "require": {
-                "types": "./dist/cjs/api/resources/tts/exports.d.ts",
-                "default": "./dist/cjs/api/resources/tts/exports.js"
+                "types": "./dist/cjs/api/resources/audio/exports.d.ts",
+                "default": "./dist/cjs/api/resources/audio/exports.js"
             },
-            "default": "./dist/cjs/api/resources/tts/exports.js"
+            "default": "./dist/cjs/api/resources/audio/exports.js"
         },
-        "./tts/audio": {
+        "./voices": {
             "import": {
-                "types": "./dist/esm/api/resources/tts/resources/audio/exports.d.mts",
-                "default": "./dist/esm/api/resources/tts/resources/audio/exports.mjs"
+                "types": "./dist/esm/api/resources/voices/exports.d.mts",
+                "default": "./dist/esm/api/resources/voices/exports.mjs"
             },
             "require": {
-                "types": "./dist/cjs/api/resources/tts/resources/audio/exports.d.ts",
-                "default": "./dist/cjs/api/resources/tts/resources/audio/exports.js"
+                "types": "./dist/cjs/api/resources/voices/exports.d.ts",
+                "default": "./dist/cjs/api/resources/voices/exports.js"
             },
-            "default": "./dist/cjs/api/resources/tts/resources/audio/exports.js"
-        },
-        "./tts/voices": {
-            "import": {
-                "types": "./dist/esm/api/resources/tts/resources/voices/exports.d.mts",
-                "default": "./dist/esm/api/resources/tts/resources/voices/exports.mjs"
-            },
-            "require": {
-                "types": "./dist/cjs/api/resources/tts/resources/voices/exports.d.ts",
-                "default": "./dist/cjs/api/resources/tts/resources/voices/exports.js"
-            },
-            "default": "./dist/cjs/api/resources/tts/resources/voices/exports.js"
+            "default": "./dist/cjs/api/resources/voices/exports.js"
         },
         "./package.json": "./package.json"
     },

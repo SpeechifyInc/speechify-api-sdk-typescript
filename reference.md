@@ -1,6 +1,6 @@
 # Reference
-## Tts Audio
-<details><summary><code>client.tts.audio.<a href="/src/api/resources/tts/resources/audio/client/Client.ts">speech</a>({ ...params }) -> Speechify.GetSpeechResponse</code></summary>
+## audio
+<details><summary><code>client.audio.<a href="/src/api/resources/audio/client/Client.ts">speech</a>({ ...params }) -> Speechify.GetSpeechResponse</code></summary>
 <dl>
 <dd>
 
@@ -29,7 +29,7 @@ low-latency playback or long-form text, use POST /v1/audio/stream.
 <dd>
 
 ```typescript
-await client.tts.audio.speech({
+await client.audio.speech({
     audio_format: "mp3",
     input: "Hello! This is the Speechify text-to-speech API.",
     model: "simba-english",
@@ -50,7 +50,7 @@ await client.tts.audio.speech({
 <dl>
 <dd>
 
-**request:** `Speechify.tts.GetSpeechRequest` 
+**request:** `Speechify.GetSpeechRequest` 
     
 </dd>
 </dl>
@@ -70,7 +70,7 @@ await client.tts.audio.speech({
 </dl>
 </details>
 
-<details><summary><code>client.tts.audio.<a href="/src/api/resources/tts/resources/audio/client/Client.ts">stream</a>({ ...params }) -> core.BinaryResponse</code></summary>
+<details><summary><code>client.audio.<a href="/src/api/resources/audio/client/Client.ts">stream</a>({ ...params }) -> core.BinaryResponse</code></summary>
 <dl>
 <dd>
 
@@ -100,7 +100,7 @@ POST /v1/audio/speech.
 <dd>
 
 ```typescript
-await client.tts.audio.stream({
+await client.audio.stream({
     Accept: "audio/mpeg",
     input: "input",
     voice_id: "voice_id"
@@ -120,7 +120,7 @@ await client.tts.audio.stream({
 <dl>
 <dd>
 
-**request:** `Speechify.tts.GetStreamRequest` 
+**request:** `Speechify.GetStreamRequest` 
     
 </dd>
 </dl>
@@ -140,8 +140,8 @@ await client.tts.audio.stream({
 </dl>
 </details>
 
-## Tts Voices
-<details><summary><code>client.tts.voices.<a href="/src/api/resources/tts/resources/voices/client/Client.ts">list</a>() -> Speechify.GetVoice[]</code></summary>
+## voices
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">list</a>() -> Speechify.GetVoice[]</code></summary>
 <dl>
 <dd>
 
@@ -168,7 +168,7 @@ Gets the list of voices available for the user
 <dd>
 
 ```typescript
-await client.tts.voices.list();
+await client.voices.list();
 
 ```
 </dd>
@@ -196,7 +196,7 @@ await client.tts.voices.list();
 </dl>
 </details>
 
-<details><summary><code>client.tts.voices.<a href="/src/api/resources/tts/resources/voices/client/Client.ts">create</a>({ ...params }) -> Speechify.CreatedVoice</code></summary>
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">create</a>({ ...params }) -> Speechify.CreatedVoice</code></summary>
 <dl>
 <dd>
 
@@ -223,7 +223,7 @@ Create a personal (cloned) voice for the user
 <dd>
 
 ```typescript
-await client.tts.voices.create({
+await client.voices.create({
     sample: fs.createReadStream("/path/to/your/file"),
     name: "name",
     gender: "male",
@@ -244,7 +244,7 @@ await client.tts.voices.create({
 <dl>
 <dd>
 
-**request:** `Speechify.tts.CreateVoicesRequest` 
+**request:** `Speechify.CreateVoicesRequest` 
     
 </dd>
 </dl>
@@ -264,7 +264,7 @@ await client.tts.voices.create({
 </dl>
 </details>
 
-<details><summary><code>client.tts.voices.<a href="/src/api/resources/tts/resources/voices/client/Client.ts">delete</a>({ ...params }) -> void</code></summary>
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">delete</a>({ ...params }) -> void</code></summary>
 <dl>
 <dd>
 
@@ -291,7 +291,7 @@ Delete a personal (cloned) voice
 <dd>
 
 ```typescript
-await client.tts.voices.delete({
+await client.voices.delete({
     id: "id"
 });
 
@@ -309,7 +309,7 @@ await client.tts.voices.delete({
 <dl>
 <dd>
 
-**request:** `Speechify.tts.DeleteVoicesRequest` 
+**request:** `Speechify.DeleteVoicesRequest` 
     
 </dd>
 </dl>
@@ -329,7 +329,7 @@ await client.tts.voices.delete({
 </dl>
 </details>
 
-<details><summary><code>client.tts.voices.<a href="/src/api/resources/tts/resources/voices/client/Client.ts">downloadSample</a>({ ...params }) -> core.BinaryResponse</code></summary>
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">downloadSample</a>({ ...params }) -> core.BinaryResponse</code></summary>
 <dl>
 <dd>
 
@@ -356,7 +356,7 @@ Download a personal (cloned) voice sample
 <dd>
 
 ```typescript
-await client.tts.voices.downloadSample({
+await client.voices.downloadSample({
     id: "id"
 });
 
@@ -374,7 +374,7 @@ await client.tts.voices.downloadSample({
 <dl>
 <dd>
 
-**request:** `Speechify.tts.DownloadSampleVoicesRequest` 
+**request:** `Speechify.DownloadSampleVoicesRequest` 
     
 </dd>
 </dl>

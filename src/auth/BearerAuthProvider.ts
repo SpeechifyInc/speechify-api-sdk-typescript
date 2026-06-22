@@ -3,7 +3,7 @@
 import * as core from "../core/index.js";
 import * as errors from "../errors/index.js";
 
-const TOKEN_PARAM = "token" as const;
+const TOKEN_PARAM = "apiKey" as const;
 const ENV_TOKEN = "SPEECHIFY_API_KEY" as const;
 
 export class BearerAuthProvider implements core.AuthProvider {
@@ -22,15 +22,15 @@ export class BearerAuthProvider implements core.AuthProvider {
     }: {
         endpointMetadata?: core.EndpointMetadata;
     } = {}): Promise<core.AuthRequest> {
-        const token = (await core.Supplier.get(this.options[TOKEN_PARAM])) ?? process.env?.[ENV_TOKEN];
-        if (token == null) {
+        const apiKey = (await core.Supplier.get(this.options[TOKEN_PARAM])) ?? process.env?.[ENV_TOKEN];
+        if (apiKey == null) {
             throw new errors.SpeechifyError({
                 message: BearerAuthProvider.AUTH_CONFIG_ERROR_MESSAGE,
             });
         }
 
         return {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${apiKey}` },
         };
     }
 }
