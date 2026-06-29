@@ -7,10 +7,10 @@
         "skipResponseValidation": true,
         "namespaceExport": "Speechify"
     },
-    "originGitCommit": "b42b087c8f8ce10db111832c1880a5e974d48e39",
+    "originGitCommit": "fdb3a9bb105ba41770503f29c40ef59a4801e2ff",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
-    "requestedVersion": "1.0.2",
+    "requestedVersion": "2.0.0",
     "ciProvider": "github",
-    "sdkVersion": "1.0.2"
+    "sdkVersion": "2.0.0"
 }

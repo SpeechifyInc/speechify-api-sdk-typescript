@@ -63,8 +63,8 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "@speechify/api",
-            "X-Fern-SDK-Version": "1.0.2",
-            "User-Agent": "@speechify/api/1.0.2",
+            "X-Fern-SDK-Version": "2.0.0",
+            "User-Agent": "@speechify/api/2.0.0",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
             "Speechify-Version": options?.version ?? "2026-06-28",
