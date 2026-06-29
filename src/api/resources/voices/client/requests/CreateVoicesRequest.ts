@@ -20,7 +20,7 @@ export interface CreateVoicesRequest {
      * Gender marker for the personal voice
      * male GenderMale
      * female GenderFemale
-     * notSpecified GenderNotSpecified
+     * not_specified GenderNotSpecified
      */
     gender: CreateVoicesRequest.Gender;
     /** Audio sample file */
@@ -40,12 +40,12 @@ export namespace CreateVoicesRequest {
      * Gender marker for the personal voice
      * male GenderMale
      * female GenderFemale
-     * notSpecified GenderNotSpecified
+     * not_specified GenderNotSpecified
      */
     export const Gender = {
         Male: "male",
         Female: "female",
-        NotSpecified: "notSpecified",
+        NotSpecified: "not_specified",
     } as const;
     export type Gender = (typeof Gender)[keyof typeof Gender];
 }

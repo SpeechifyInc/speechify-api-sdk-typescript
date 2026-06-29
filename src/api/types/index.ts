@@ -1,6 +1,3 @@
-export * from "./CreatedVoice.js";
-export * from "./CreateVoiceLanguage.js";
-export * from "./CreateVoiceModel.js";
 export * from "./Error_.js";
 export * from "./ErrorCode.js";
 export * from "./ErrorDetail.js";
@@ -10,5 +7,7 @@ export * from "./GetStreamOptionsRequest.js";
 export * from "./GetVoice.js";
 export * from "./GetVoiceLanguage.js";
 export * from "./GetVoicesModel.js";
+export * from "./ListVoicesResponse.js";
 export * from "./NestedChunk.js";
+export * from "./PaginationMeta.js";
 export * from "./SpeechMarks.js";

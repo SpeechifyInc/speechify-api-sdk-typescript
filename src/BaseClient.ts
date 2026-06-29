@@ -15,6 +15,8 @@ export type BaseClientOptions = {
     environment?: core.Supplier<environments.SpeechifyEnvironment | string>;
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
+    /** Override the Speechify-Version header */
+    version?: core.Supplier<string | undefined>;
     /** Additional headers to include in requests. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** The default maximum time to wait for a response in seconds. */
@@ -36,6 +38,8 @@ export interface BaseRequestOptions {
     maxRetries?: number;
     /** A hook to abort the request. */
     abortSignal?: AbortSignal;
+    /** Override the Speechify-Version header */
+    version?: string | undefined;
     /** Additional query string parameters to include in the request. */
     queryParams?: Record<string, unknown>;
     /** Additional headers to include in the request. */
@@ -59,10 +63,11 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "@speechify/api",
-            "X-Fern-SDK-Version": "1.0.2",
-            "User-Agent": "@speechify/api/1.0.2",
+            "X-Fern-SDK-Version": "2.0.0",
+            "User-Agent": "@speechify/api/2.0.0",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
+            "Speechify-Version": options?.version ?? "2026-06-28",
         },
         options?.headers,
     );

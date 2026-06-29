@@ -3,10 +3,10 @@
 /**
  * @example
  *     {
- *         id: "id"
+ *         voice_id: "voice_id"
  *     }
  */
 export interface DownloadSampleVoicesRequest {
     /** The ID of the voice to download sample for */
-    id: string;
+    voice_id: string;
 }

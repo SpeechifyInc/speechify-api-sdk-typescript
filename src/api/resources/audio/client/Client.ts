@@ -68,6 +68,9 @@ export class AudioClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -173,7 +176,10 @@ export class AudioClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ Accept: accept }),
+            mergeOnlyDefinedHeaders({
+                Accept: accept,
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher<core.BinaryResponse>({

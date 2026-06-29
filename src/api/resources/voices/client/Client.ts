@@ -27,10 +27,17 @@ export class VoicesClient {
     }
 
     /**
-     * Gets the list of voices available for the user
+     * Lists the voices available to the caller - the shared voice
+     * catalog plus the workspace's personal cloned voices. By default
+     * the full catalogue is returned in one response. Pagination is
+     * opt-in: pass `limit` (and then `cursor` from the previous
+     * response) to page through the list while `has_more` is true. Max
+     * page size is 200.
      *
+     * @param {Speechify.ListVoicesRequest} request
      * @param {VoicesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Speechify.BadRequestError}
      * @throws {@link Speechify.UnauthorizedError}
      * @throws {@link Speechify.ForbiddenError}
      * @throws {@link Speechify.TooManyRequestsError}
@@ -39,65 +46,98 @@ export class VoicesClient {
      * @example
      *     await client.voices.list()
      */
-    public list(requestOptions?: VoicesClient.RequestOptions): core.HttpResponsePromise<Speechify.GetVoice[]> {
-        return core.HttpResponsePromise.fromPromise(this.__list(requestOptions));
-    }
-
-    private async __list(
+    public async list(
+        request: Speechify.ListVoicesRequest = {},
         requestOptions?: VoicesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Speechify.GetVoice[]>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            requestOptions?.headers,
+    ): Promise<core.Page<Speechify.GetVoice, Speechify.ListVoicesResponse>> {
+        const list = core.HttpResponsePromise.interceptFunction(
+            async (
+                request: Speechify.ListVoicesRequest,
+            ): Promise<core.WithRawResponse<Speechify.ListVoicesResponse>> => {
+                const { cursor, limit } = request;
+                const _queryParams: Record<string, unknown> = {
+                    cursor,
+                    limit,
+                };
+                const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+                const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+                    _authRequest.headers,
+                    this._options?.headers,
+                    mergeOnlyDefinedHeaders({
+                        "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+                    }),
+                    requestOptions?.headers,
+                );
+                const _response = await core.fetcher({
+                    url: core.url.join(
+                        (await core.Supplier.get(this._options.baseUrl)) ??
+                            (await core.Supplier.get(this._options.environment)) ??
+                            environments.SpeechifyEnvironment.Default,
+                        "v1/voices",
+                    ),
+                    method: "GET",
+                    headers: _headers,
+                    queryString: core.url
+                        .queryBuilder()
+                        .addMany(_queryParams)
+                        .mergeAdditional(requestOptions?.queryParams)
+                        .build(),
+                    timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+                    maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+                    abortSignal: requestOptions?.abortSignal,
+                    fetchFn: this._options?.fetch,
+                    logging: this._options.logging,
+                });
+                if (_response.ok) {
+                    return { data: _response.body as Speechify.ListVoicesResponse, rawResponse: _response.rawResponse };
+                }
+                if (_response.error.reason === "status-code") {
+                    switch (_response.error.statusCode) {
+                        case 400:
+                            throw new Speechify.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                        case 401:
+                            throw new Speechify.UnauthorizedError(
+                                _response.error.body as unknown,
+                                _response.rawResponse,
+                            );
+                        case 403:
+                            throw new Speechify.ForbiddenError(
+                                _response.error.body as Speechify.Error_,
+                                _response.rawResponse,
+                            );
+                        case 429:
+                            throw new Speechify.TooManyRequestsError(
+                                _response.error.body as Speechify.Error_,
+                                _response.rawResponse,
+                            );
+                        case 500:
+                            throw new Speechify.InternalServerError(
+                                _response.error.body as Speechify.Error_,
+                                _response.rawResponse,
+                            );
+                        default:
+                            throw new errors.SpeechifyError({
+                                statusCode: _response.error.statusCode,
+                                body: _response.error.body,
+                                rawResponse: _response.rawResponse,
+                            });
+                    }
+                }
+                return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/voices");
+            },
         );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.SpeechifyEnvironment.Default,
-                "v1/voices",
-            ),
-            method: "GET",
-            headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
+        const dataWithRawResponse = await list(request).withRawResponse();
+        return new core.Page<Speechify.GetVoice, Speechify.ListVoicesResponse>({
+            response: dataWithRawResponse.data,
+            rawResponse: dataWithRawResponse.rawResponse,
+            hasNextPage: (response) =>
+                response?.next_cursor != null &&
+                !(typeof response?.next_cursor === "string" && response?.next_cursor === ""),
+            getItems: (response) => response?.voices ?? [],
+            loadPage: (response) => {
+                return list(core.setObjectProperty(request, "cursor", response?.next_cursor));
+            },
         });
-        if (_response.ok) {
-            return { data: _response.body as Speechify.GetVoice[], rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 401:
-                    throw new Speechify.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Speechify.ForbiddenError(_response.error.body as Speechify.Error_, _response.rawResponse);
-                case 429:
-                    throw new Speechify.TooManyRequestsError(
-                        _response.error.body as Speechify.Error_,
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Speechify.InternalServerError(
-                        _response.error.body as Speechify.Error_,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.SpeechifyError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/voices");
     }
 
     /**
@@ -128,14 +168,14 @@ export class VoicesClient {
     public create(
         request: Speechify.CreateVoicesRequest,
         requestOptions?: VoicesClient.RequestOptions,
-    ): core.HttpResponsePromise<Speechify.CreatedVoice> {
+    ): core.HttpResponsePromise<Speechify.GetVoice> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Speechify.CreateVoicesRequest,
         requestOptions?: VoicesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Speechify.CreatedVoice>> {
+    ): Promise<core.WithRawResponse<Speechify.GetVoice>> {
         const _body = await core.newFormData();
         _body.append("name", request.name);
         if (request.locale != null) {
@@ -154,7 +194,10 @@ export class VoicesClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ ..._maybeEncodedRequest.headers }),
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+                ..._maybeEncodedRequest.headers,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -177,7 +220,7 @@ export class VoicesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Speechify.CreatedVoice, rawResponse: _response.rawResponse };
+            return { data: _response.body as Speechify.GetVoice, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -231,6 +274,109 @@ export class VoicesClient {
     }
 
     /**
+     * Fetch a single voice by id - a shared catalogue voice or one of
+     * the caller's own personal (cloned) voices. A personal voice that
+     * belongs to another workspace returns 404, identical to an
+     * unknown id, so voice inventory is never enumerable across tenants.
+     *
+     * @param {Speechify.GetVoicesRequest} request
+     * @param {VoicesClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Speechify.BadRequestError}
+     * @throws {@link Speechify.UnauthorizedError}
+     * @throws {@link Speechify.NotFoundError}
+     * @throws {@link Speechify.TooManyRequestsError}
+     * @throws {@link Speechify.InternalServerError}
+     * @throws {@link Speechify.BadGatewayError}
+     * @throws {@link Speechify.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.voices.get({
+     *         voice_id: "voice_id"
+     *     })
+     */
+    public get(
+        request: Speechify.GetVoicesRequest,
+        requestOptions?: VoicesClient.RequestOptions,
+    ): core.HttpResponsePromise<Speechify.GetVoice> {
+        return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
+    }
+
+    private async __get(
+        request: Speechify.GetVoicesRequest,
+        requestOptions?: VoicesClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Speechify.GetVoice>> {
+        const { voice_id: voiceId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.SpeechifyEnvironment.Default,
+                `v1/voices/${core.url.encodePathParam(voiceId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Speechify.GetVoice, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Speechify.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Speechify.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Speechify.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Speechify.TooManyRequestsError(
+                        _response.error.body as Speechify.Error_,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Speechify.InternalServerError(
+                        _response.error.body as Speechify.Error_,
+                        _response.rawResponse,
+                    );
+                case 502:
+                    throw new Speechify.BadGatewayError(
+                        _response.error.body as Speechify.Error_,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new Speechify.ServiceUnavailableError(
+                        _response.error.body as Speechify.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.SpeechifyError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/voices/{voice_id}");
+    }
+
+    /**
      * Delete a personal (cloned) voice
      *
      * @param {Speechify.DeleteVoicesRequest} request
@@ -247,7 +393,7 @@ export class VoicesClient {
      *
      * @example
      *     await client.voices.delete({
-     *         id: "id"
+     *         voice_id: "voice_id"
      *     })
      */
     public delete(
@@ -261,11 +407,14 @@ export class VoicesClient {
         request: Speechify.DeleteVoicesRequest,
         requestOptions?: VoicesClient.RequestOptions,
     ): Promise<core.WithRawResponse<void>> {
-        const { id } = request;
+        const { voice_id: voiceId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -273,7 +422,7 @@ export class VoicesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.SpeechifyEnvironment.Default,
-                `v1/voices/${core.url.encodePathParam(id)}`,
+                `v1/voices/${core.url.encodePathParam(voiceId)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -327,7 +476,7 @@ export class VoicesClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/v1/voices/{id}");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/v1/voices/{voice_id}");
     }
 
     /**
@@ -353,11 +502,14 @@ export class VoicesClient {
         request: Speechify.DownloadSampleVoicesRequest,
         requestOptions?: VoicesClient.RequestOptions,
     ): Promise<core.WithRawResponse<core.BinaryResponse>> {
-        const { id } = request;
+        const { voice_id: voiceId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-06-28",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher<core.BinaryResponse>({
@@ -365,7 +517,7 @@ export class VoicesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.SpeechifyEnvironment.Default,
-                `v1/voices/${core.url.encodePathParam(id)}/sample`,
+                `v1/voices/${core.url.encodePathParam(voiceId)}/sample`,
             ),
             method: "GET",
             headers: _headers,
@@ -420,6 +572,6 @@ export class VoicesClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/voices/{id}/sample");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/voices/{voice_id}/sample");
     }
 }

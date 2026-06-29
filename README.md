@@ -1,9 +1,9 @@
-# Speechifyinc TypeScript Library
+# Speechify TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fspeechifyinc%2Fspeechify-api-sdk-typescript)
 [![npm shield](https://img.shields.io/npm/v/@speechify/api)](https://www.npmjs.com/package/@speechify/api)
 
-The Speechifyinc TypeScript library provides convenient access to the Speechifyinc APIs from TypeScript.
+The Speechify TypeScript library provides convenient access to the Speechify APIs from TypeScript.
 
 ## Table of Contents
 
@@ -16,6 +16,7 @@ The Speechifyinc TypeScript library provides convenient access to the Speechifyi
 - [Exception Handling](#exception-handling)
 - [File Uploads](#file-uploads)
 - [Binary Response](#binary-response)
+- [Pagination](#pagination)
 - [Advanced](#advanced)
   - [Subpackage Exports](#subpackage-exports)
   - [Additional Headers](#additional-headers)
@@ -50,7 +51,7 @@ Instantiate and use the client with the following:
 ```typescript
 import { SpeechifyClient } from "@speechify/api";
 
-const client = new SpeechifyClient({ apiKey: "YOUR_API_KEY" });
+const client = new SpeechifyClient({ token: "YOUR_TOKEN", version: "2026-06-28" });
 await client.audio.speech({
     audio_format: "mp3",
     input: "Hello! This is the Speechify text-to-speech API.",
@@ -113,7 +114,7 @@ import { createReadStream } from "fs";
 import * as fs from "fs";
 import { SpeechifyClient } from "@speechify/api";
 
-const client = new SpeechifyClient({ apiKey: "YOUR_API_KEY" });
+const client = new SpeechifyClient({ token: "YOUR_TOKEN", version: "2026-06-28" });
 await client.voices.create({
     sample: fs.createReadStream("/path/to/your/file"),
     name: "name",
@@ -539,6 +540,29 @@ const text = new TextDecoder().decode(bytes);
 </blockquote>
 
 </details>
+
+## Pagination
+
+List endpoints are paginated. The SDK provides an iterator so that you can simply loop over the items:
+
+```typescript
+import { SpeechifyClient } from "@speechify/api";
+
+const client = new SpeechifyClient({ token: "YOUR_TOKEN", version: "2026-06-28" });
+const pageableResponse = await client.voices.list();
+for await (const item of pageableResponse) {
+    console.log(item);
+}
+
+// Or you can manually iterate page-by-page
+let page = await client.voices.list();
+while (page.hasNextPage()) {
+    page = page.getNextPage();
+}
+
+// You can also access the underlying response
+const response = page.response;
+```
 
 ## Advanced
 
