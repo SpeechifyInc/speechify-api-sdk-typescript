@@ -6,12 +6,22 @@ import type * as core from "../../../../../core/index.js";
  * @example
  *     {
  *         sample: fs.createReadStream("/path/to/your/file"),
+ *         "Idempotency-Key": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
  *         name: "name",
  *         gender: "male",
  *         consent: "consent"
  *     }
  */
 export interface CreateVoicesRequest {
+    /**
+     * A client-generated key (an opaque string, max 255 chars) that makes a
+     * side-effect POST safe to retry: the server runs the operation exactly
+     * once and replays the first response (its status and body) for 24 hours.
+     * Reusing a key with a different request body, or while the first request
+     * is still in flight, returns `409 idempotency_conflict`. A replayed
+     * response carries the `Idempotent-Replayed: true` header.
+     */
+    "Idempotency-Key"?: string;
     /** Name of the personal voice */
     name: string;
     /** Native language (locale) of the personal voice (e.g. en-US, es-ES, etc.) */
@@ -20,7 +30,7 @@ export interface CreateVoicesRequest {
      * Gender marker for the personal voice
      * male GenderMale
      * female GenderFemale
-     * notSpecified GenderNotSpecified
+     * not_specified GenderNotSpecified
      */
     gender: CreateVoicesRequest.Gender;
     /** Audio sample file */
@@ -40,12 +50,12 @@ export namespace CreateVoicesRequest {
      * Gender marker for the personal voice
      * male GenderMale
      * female GenderFemale
-     * notSpecified GenderNotSpecified
+     * not_specified GenderNotSpecified
      */
     export const Gender = {
         Male: "male",
         Female: "female",
-        NotSpecified: "notSpecified",
+        NotSpecified: "not_specified",
     } as const;
     export type Gender = (typeof Gender)[keyof typeof Gender];
 }

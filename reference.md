@@ -15,6 +15,8 @@
 Synthesize speech audio from text or SSML. Returns the complete audio
 file plus billing and speech-mark metadata in a single JSON response.
 For low-latency playback or long-form text, use POST /v1/audio/stream.
+Set `output_format` for explicit sample-rate/bitrate control (e.g.
+`pcm_16000` or `ulaw_8000` for telephony).
 </dd>
 </dl>
 </dd>
@@ -83,9 +85,11 @@ await client.audio.speech({
 <dd>
 
 Synthesize speech and stream the audio back as it is generated, for
-low-latency playback. The Accept header selects the audio container;
-the response is raw audio bytes (HTTP chunked). For Base64-encoded
-audio with speech-mark metadata in a single JSON response, use
+low-latency playback. Set `output_format` in the body for explicit
+codec/sample-rate/bitrate control (e.g. `pcm_16000` or `ulaw_8000` for
+telephony), or fall back to the Accept header for the container; the
+response is raw audio bytes (HTTP chunked). For Base64-encoded audio
+with speech-mark metadata in a single JSON response, use
 POST /v1/audio/speech.
 </dd>
 </dl>
@@ -102,7 +106,6 @@ POST /v1/audio/speech.
 
 ```typescript
 await client.audio.stream({
-    Accept: "audio/mpeg",
     input: "input",
     voice_id: "voice_id"
 });
@@ -142,7 +145,7 @@ await client.audio.stream({
 </details>
 
 ## voices
-<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">list</a>() -> Speechify.GetVoice[]</code></summary>
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">list</a>({ ...params }) -> core.Page&lt;Speechify.GetVoice, Speechify.ListVoicesResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -154,7 +157,12 @@ await client.audio.stream({
 <dl>
 <dd>
 
-Gets the list of voices available for the user
+Lists the voices available to the caller - the shared voice
+catalog plus the workspace's personal cloned voices. By default
+the full catalogue is returned in one response. Pagination is
+opt-in: pass `limit` (and then `cursor` from the previous
+response) to page through the list while `has_more` is true. Max
+page size is 200.
 </dd>
 </dl>
 </dd>
@@ -169,7 +177,19 @@ Gets the list of voices available for the user
 <dd>
 
 ```typescript
-await client.voices.list();
+const pageableResponse = await client.voices.list();
+for await (const item of pageableResponse) {
+    console.log(item);
+}
+
+// Or you can manually iterate page-by-page
+let page = await client.voices.list();
+while (page.hasNextPage()) {
+    page = page.getNextPage();
+}
+
+// You can also access the underlying response
+const response = page.response;
 
 ```
 </dd>
@@ -181,6 +201,14 @@ await client.voices.list();
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**request:** `Speechify.ListVoicesRequest` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -197,7 +225,7 @@ await client.voices.list();
 </dl>
 </details>
 
-<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">create</a>({ ...params }) -> Speechify.CreatedVoice</code></summary>
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">create</a>({ ...params }) -> Speechify.GetVoice</code></summary>
 <dl>
 <dd>
 
@@ -226,6 +254,7 @@ Create a personal (cloned) voice for the user
 ```typescript
 await client.voices.create({
     sample: fs.createReadStream("/path/to/your/file"),
+    "Idempotency-Key": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
     name: "name",
     gender: "male",
     consent: "consent"
@@ -246,6 +275,74 @@ await client.voices.create({
 <dd>
 
 **request:** `Speechify.CreateVoicesRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `VoicesClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.voices.<a href="/src/api/resources/voices/client/Client.ts">get</a>({ ...params }) -> Speechify.GetVoice</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Fetch a single voice by id - a shared catalogue voice or one of
+the caller's own personal (cloned) voices. A personal voice that
+belongs to another workspace returns 404, identical to an
+unknown id, so voice inventory is never enumerable across tenants.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.voices.get({
+    voice_id: "voice_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Speechify.GetVoicesRequest` 
     
 </dd>
 </dl>
@@ -293,7 +390,7 @@ Delete a personal (cloned) voice
 
 ```typescript
 await client.voices.delete({
-    id: "id"
+    voice_id: "voice_id"
 });
 
 ```
@@ -358,7 +455,7 @@ Download a personal (cloned) voice sample
 
 ```typescript
 await client.voices.downloadSample({
-    id: "id"
+    voice_id: "voice_id"
 });
 
 ```

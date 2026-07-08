@@ -20,4 +20,13 @@ export interface ErrorDetail {
      * offending form field.
      */
     fields?: Record<string, string> | undefined;
+    /**
+     * Structured, endpoint-specific context beyond the flat
+     * `fields` map. Present only on the few errors that carry
+     * it (e.g. the `used_by` referrer list on a credential
+     * delete-conflict); its shape depends on the error `code`.
+     * Clients that don't recognise a `details` shape can ignore
+     * it - the `code` + `message` contract is unchanged.
+     */
+    details?: Record<string, unknown> | undefined;
 }

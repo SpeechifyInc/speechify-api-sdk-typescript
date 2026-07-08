@@ -6,7 +6,7 @@
  *         voice_id: "voice_id"
  *     }
  */
-export interface DeleteVoicesRequest {
-    /** The ID of the voice to delete */
+export interface GetVoicesRequest {
+    /** The ID of the voice to fetch */
     voice_id: string;
 }
