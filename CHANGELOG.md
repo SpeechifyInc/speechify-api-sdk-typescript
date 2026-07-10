@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.1](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/compare/3.0.0...3.0.1) (2026-07-10)
+
+
+### Bug Fixes
+
+* bump SDK_VERSION to 3.0.0 ([#11](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/issues/11)) ([2b22469](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/commit/2b22469a9182b7bc509ff7f624d8240096b0f874))
+* correct SDK_VERSION and release 3.0.1 ([#14](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/issues/14)) ([7b09e8b](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/commit/7b09e8b9a216606618f411be5518c67e889cba3d))
+
 ## [3.0.0](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/compare/2.0.0...3.0.0) (2026-07-10)
 
 
