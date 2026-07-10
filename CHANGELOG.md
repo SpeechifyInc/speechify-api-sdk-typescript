@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/compare/2.0.0...3.0.0) (2026-07-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* removed voice types `CreatedVoice`, `CreateVoiceModel`, `CreateVoiceLanguage`; `GetSpeechResponse.audio_format` redocumented as the audio codec. Additive: new `AudioFormat.Ulaw` value, `output_format` field, `AudioOutputFormat` / `PaginationMeta` / `ListVoicesResponse`, `ConflictError`.
+
+### Features
+
+* regenerate SDK on fern-typescript-sdk@3.70.1 (TTS surface) ([#8](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/issues/8)) ([df2eb69](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/commit/df2eb690bed2c4edccf2cc42834c266478a0e7ac))
+
 ## [2.0.0](https://github.com/SpeechifyInc/speechify-api-sdk-typescript/compare/1.0.2...2.0.0) (2026-06-22)
 
 
