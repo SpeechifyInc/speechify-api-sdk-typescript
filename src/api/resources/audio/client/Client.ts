@@ -31,6 +31,8 @@ export class AudioClient {
      * Synthesize speech audio from text or SSML. Returns the complete audio
      * file plus billing and speech-mark metadata in a single JSON response.
      * For low-latency playback or long-form text, use POST /v1/audio/stream.
+     * Set `output_format` for explicit sample-rate/bitrate control (e.g.
+     * `pcm_16000` or `ulaw_8000` for telephony).
      *
      * @param {Speechify.GetSpeechRequest} request
      * @param {AudioClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -68,6 +70,9 @@ export class AudioClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-07-07",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -142,9 +147,11 @@ export class AudioClient {
 
     /**
      * Synthesize speech and stream the audio back as it is generated, for
-     * low-latency playback. The Accept header selects the audio container;
-     * the response is raw audio bytes (HTTP chunked). For Base64-encoded
-     * audio with speech-mark metadata in a single JSON response, use
+     * low-latency playback. Set `output_format` in the body for explicit
+     * codec/sample-rate/bitrate control (e.g. `pcm_16000` or `ulaw_8000` for
+     * telephony), or fall back to the Accept header for the container; the
+     * response is raw audio bytes (HTTP chunked). For Base64-encoded audio
+     * with speech-mark metadata in a single JSON response, use
      * POST /v1/audio/speech.
      *
      * @throws {@link Speechify.BadRequestError}
@@ -173,7 +180,10 @@ export class AudioClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ Accept: accept }),
+            mergeOnlyDefinedHeaders({
+                Accept: accept,
+                "Speechify-Version": requestOptions?.version ?? this._options?.version ?? "2026-07-07",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher<core.BinaryResponse>({

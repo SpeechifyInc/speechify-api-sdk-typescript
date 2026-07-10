@@ -7,7 +7,12 @@ import { mockServerPool } from "../mock-server/MockServerPool";
 describe("AudioClient", () => {
     test("speech (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = {
             audio_format: "mp3",
             input: "Hello! This is the Speechify text-to-speech API.",
@@ -15,17 +20,18 @@ describe("AudioClient", () => {
             voice_id: "george",
         };
         const rawResponseBody = {
-            audio_data: "audio_data",
+            audio_data: "example",
             audio_format: "wav",
-            billable_characters_count: 1000000,
+            billable_characters_count: 10,
+            output_format: "pcm_8000",
             speech_marks: {
                 chunks: [{}],
-                end: 1000000,
-                end_time: 1.1,
-                start: 1000000,
-                start_time: 1.1,
-                type: "type",
-                value: "value",
+                end: 1,
+                end_time: 1,
+                start: 1,
+                start_time: 1,
+                type: "example",
+                value: "example",
             },
         };
 
@@ -49,7 +55,12 @@ describe("AudioClient", () => {
 
     test("speech (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { key: "value" };
 
@@ -72,7 +83,12 @@ describe("AudioClient", () => {
 
     test("speech (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { key: "value" };
 
@@ -95,7 +111,12 @@ describe("AudioClient", () => {
 
     test("speech (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -118,7 +139,12 @@ describe("AudioClient", () => {
 
     test("speech (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -141,7 +167,12 @@ describe("AudioClient", () => {
 
     test("speech (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { key: "value" };
 
@@ -164,7 +195,12 @@ describe("AudioClient", () => {
 
     test("speech (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -187,7 +223,12 @@ describe("AudioClient", () => {
 
     test("speech (8)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -210,7 +251,12 @@ describe("AudioClient", () => {
 
     test("speech (9)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -233,7 +279,12 @@ describe("AudioClient", () => {
 
     test("speech (10)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
         const rawRequestBody = { input: "input", voice_id: "voice_id" };
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 

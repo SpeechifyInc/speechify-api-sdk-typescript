@@ -18,7 +18,7 @@ export namespace GetVoice {
     export const Gender = {
         Male: "male",
         Female: "female",
-        NotSpecified: "notSpecified",
+        NotSpecified: "not_specified",
     } as const;
     export type Gender = (typeof Gender)[keyof typeof Gender];
     export const Type = {

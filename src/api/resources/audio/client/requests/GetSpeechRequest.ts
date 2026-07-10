@@ -25,9 +25,11 @@ export interface GetSpeechRequest {
      * Please refer to the list of the supported languages and recommendations regarding this parameter: https://docs.speechify.ai/docs/language-support.
      */
     language?: string;
-    /** Model used for audio synthesis. `simba-english` is optimized for English, `simba-multilingual` for non-English or mixed input. `simba-3.0` is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
+    /** Model used for audio synthesis. `simba-english` is optimized for English, `simba-multilingual` for non-English or mixed input. `simba-3.2` is the streaming-native model with lower TTFB and richer expressivity, and the recommended Simba 3 model. `simba-3.0` is the earlier Simba 3.0 model, still available. `simba-3.0` and `simba-3.2` are currently English only; multilingual coming soon, and non-English voices return 400 until it ships. */
     model?: GetSpeechRequest.Model;
     options?: Speechify.GetSpeechOptionsRequest;
+    /** The output audio format as a `codec_sampleRate_bitrate` string. Takes precedence over `audio_format` when set. */
+    output_format?: Speechify.AudioOutputFormat;
     /** Id of the voice to be used for synthesizing speech. Refer to /v1/voices endpoint for available voices */
     voice_id: string;
 }
@@ -42,7 +44,7 @@ export namespace GetSpeechRequest {
         Pcm: "pcm",
     } as const;
     export type AudioFormat = (typeof AudioFormat)[keyof typeof AudioFormat];
-    /** Model used for audio synthesis. `simba-english` is optimized for English, `simba-multilingual` for non-English or mixed input. `simba-3.0` is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
+    /** Model used for audio synthesis. `simba-english` is optimized for English, `simba-multilingual` for non-English or mixed input. `simba-3.2` is the streaming-native model with lower TTFB and richer expressivity, and the recommended Simba 3 model. `simba-3.0` is the earlier Simba 3.0 model, still available. `simba-3.0` and `simba-3.2` are currently English only; multilingual coming soon, and non-English voices return 400 until it ships. */
     export const Model = {
         /**
          * simba-english is optimized for English words. */
@@ -51,8 +53,11 @@ export namespace GetSpeechRequest {
          * simba-multilingual is optimized for non-English words or mixed languages. */
         SimbaMultilingual: "simba-multilingual",
         /**
-         * simba-3.0 is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
+         * simba-3.0 is the earlier Simba 3.0 model, still available. Prefer simba-3.2 for the latest quality. Currently English only; non-English voices return 400. */
         Simba30: "simba-3.0",
+        /**
+         * simba-3.2 is the streaming-native model with lower TTFB and richer expressivity. Currently English only; multilingual coming soon. Non-English voices return 400 until multilingual support ships. */
+        Simba32: "simba-3.2",
     } as const;
     export type Model = (typeof Model)[keyof typeof Model];
 }

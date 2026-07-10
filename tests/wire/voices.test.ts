@@ -7,31 +7,74 @@ import { mockServerPool } from "../mock-server/MockServerPool";
 describe("VoicesClient", () => {
     test("list (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
-        const rawResponseBody = [
-            {
-                avatar_image: "avatar_image",
-                display_name: "display_name",
-                gender: "male",
-                locale: "locale",
-                id: "id",
-                models: [{ languages: [{ locale: "locale" }], name: "simba-english" }],
-                preview_audio: "preview_audio",
-                tags: ["tags"],
-                type: "shared",
-            },
-        ];
+        const rawResponseBody = {
+            next_cursor: "next_cursor",
+            has_more: true,
+            voices: [
+                {
+                    avatar_image: "example",
+                    display_name: "Example name",
+                    gender: "male",
+                    locale: "en-US",
+                    id: "scott",
+                    models: [{ languages: [{ locale: "locale" }], name: "simba-english" }],
+                    preview_audio: "example",
+                    tags: ["example"],
+                    type: "shared",
+                },
+            ],
+        };
 
-        server.mockEndpoint().get("/v1/voices").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint({ once: false })
+            .get("/v1/voices")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
 
-        const response = await client.voices.list();
-        expect(response).toEqual(rawResponseBody);
+        const expected = rawResponseBody;
+        const page = await client.voices.list();
+
+        expect(expected.voices).toEqual(page.data);
+        expect(page.hasNextPage()).toBe(true);
+        const nextPage = await page.getNextPage();
+        expect(expected.voices).toEqual(nextPage.data);
     });
 
     test("list (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/voices").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.voices.list();
+        }).rejects.toThrow(Speechify.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { key: "value" };
 
@@ -42,9 +85,14 @@ describe("VoicesClient", () => {
         }).rejects.toThrow(Speechify.UnauthorizedError);
     });
 
-    test("list (3)", async () => {
+    test("list (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -55,9 +103,14 @@ describe("VoicesClient", () => {
         }).rejects.toThrow(Speechify.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -68,9 +121,14 @@ describe("VoicesClient", () => {
         }).rejects.toThrow(Speechify.TooManyRequestsError);
     });
 
-    test("list (5)", async () => {
+    test("list (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
@@ -81,134 +139,444 @@ describe("VoicesClient", () => {
         }).rejects.toThrow(Speechify.InternalServerError);
     });
 
+    test("get (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = {
+            avatar_image: "example",
+            display_name: "Example name",
+            gender: "male",
+            locale: "en-US",
+            id: "scott",
+            models: [{ languages: [{ locale: "locale" }], name: "simba-english" }],
+            preview_audio: "example",
+            tags: ["example"],
+            type: "shared",
+        };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.voices.get({
+            voice_id: "voice_id",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("get (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.NotFoundError);
+    });
+
+    test("get (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { error: { code: "bad_request", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.TooManyRequestsError);
+    });
+
+    test("get (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { error: { code: "bad_request", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.InternalServerError);
+    });
+
+    test("get (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { error: { code: "bad_request", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(502)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.BadGatewayError);
+    });
+
+    test("get (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
+
+        const rawResponseBody = { error: { code: "bad_request", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(503)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voices.get({
+                voice_id: "voice_id",
+            });
+        }).rejects.toThrow(Speechify.ServiceUnavailableError);
+    });
+
     test("delete (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(200).build();
+        server.mockEndpoint().delete("/v1/voices/voice_id").respondWith().statusCode(200).build();
 
         const response = await client.voices.delete({
-            id: "id",
+            voice_id: "voice_id",
         });
         expect(response).toEqual(undefined);
     });
 
     test("delete (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { key: "value" };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.BadRequestError);
     });
 
     test("delete (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { key: "value" };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.UnauthorizedError);
     });
 
     test("delete (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.ForbiddenError);
     });
 
     test("delete (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { key: "value" };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.NotFoundError);
     });
 
     test("delete (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.TooManyRequestsError);
     });
 
     test("delete (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.InternalServerError);
     });
 
     test("delete (8)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(502).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(502)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.BadGatewayError);
     });
 
     test("delete (9)", async () => {
         const server = mockServerPool.createServer();
-        const client = new SpeechifyClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new SpeechifyClient({
+            maxRetries: 0,
+            token: "test",
+            version: "test",
+            environment: server.baseUrl,
+        });
 
         const rawResponseBody = { error: { code: "bad_request", message: "message" } };
 
-        server.mockEndpoint().delete("/v1/voices/id").respondWith().statusCode(503).jsonBody(rawResponseBody).build();
+        server
+            .mockEndpoint()
+            .delete("/v1/voices/voice_id")
+            .respondWith()
+            .statusCode(503)
+            .jsonBody(rawResponseBody)
+            .build();
 
         await expect(async () => {
             return await client.voices.delete({
-                id: "id",
+                voice_id: "voice_id",
             });
         }).rejects.toThrow(Speechify.ServiceUnavailableError);
     });

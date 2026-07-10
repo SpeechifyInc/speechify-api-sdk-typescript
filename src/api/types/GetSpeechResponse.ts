@@ -5,21 +5,24 @@ import type * as Speechify from "../index.js";
 export interface GetSpeechResponse {
     /** Synthesized speech audio, Base64-encoded */
     audio_data: string;
-    /** The format of the audio data */
+    /** The codec of the audio data */
     audio_format: GetSpeechResponse.AudioFormat;
     /** The number of billable characters processed in the request. */
     billable_characters_count: number;
+    /** The full `codec_sampleRate_bitrate` format, echoed back when the request set `output_format`. */
+    output_format?: Speechify.AudioOutputFormat | undefined;
     speech_marks: Speechify.SpeechMarks;
 }
 
 export namespace GetSpeechResponse {
-    /** The format of the audio data */
+    /** The codec of the audio data */
     export const AudioFormat = {
         Wav: "wav",
         Mp3: "mp3",
         Ogg: "ogg",
         Aac: "aac",
         Pcm: "pcm",
+        Ulaw: "ulaw",
     } as const;
     export type AudioFormat = (typeof AudioFormat)[keyof typeof AudioFormat];
 }
