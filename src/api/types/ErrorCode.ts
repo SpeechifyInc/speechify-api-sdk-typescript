@@ -130,6 +130,7 @@ export const ErrorCode = {
     FundedBalanceRequired: "funded_balance_required",
     AgentPublishGateFailed: "agent_publish_gate_failed",
     AgentPublishGateRequired: "agent_publish_gate_required",
+    AgentPublishGateUnavailable: "agent_publish_gate_unavailable",
     TextChannelNotInPlan: "text_channel_not_in_plan",
     ChannelNotInPlan: "channel_not_in_plan",
     TextTurnFailed: "text_turn_failed",
