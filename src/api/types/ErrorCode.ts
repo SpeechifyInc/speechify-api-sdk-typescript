@@ -81,6 +81,7 @@ export const ErrorCode = {
     CrossProjectReference: "cross_project_reference",
     ProjectHasScopedCredentials: "project_has_scoped_credentials",
     ProjectLimitReached: "project_limit_reached",
+    AgentLimitReached: "agent_limit_reached",
     ProjectTooLargeToPromote: "project_too_large_to_promote",
     CallNotFound: "call_not_found",
     MessageNotFound: "message_not_found",
