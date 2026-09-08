@@ -45,7 +45,6 @@ export const ErrorCode = {
     TriggerNotFound: "trigger_not_found",
     StoreNotFound: "store_not_found",
     StoreDocumentNotFound: "store_document_not_found",
-    StoreAssetNotFound: "store_asset_not_found",
     HostedApiNotFound: "hosted_api_not_found",
     ApiRouteNotFound: "api_route_not_found",
     ConsumerKeyNotFound: "consumer_key_not_found",
