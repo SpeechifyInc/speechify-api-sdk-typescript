@@ -52,6 +52,8 @@ export const ErrorCode = {
     SkillNotFound: "skill_not_found",
     SkillVersionNotFound: "skill_version_not_found",
     FileNotFound: "file_not_found",
+    FilePathTaken: "file_path_taken",
+    FileStorageLimitReached: "file_storage_limit_reached",
     StoreLimitReached: "store_limit_reached",
     StoreDocumentLimitReached: "store_document_limit_reached",
     StoreBytesLimitReached: "store_bytes_limit_reached",
