@@ -51,6 +51,7 @@ export const ErrorCode = {
     ConsumerKeyNotFound: "consumer_key_not_found",
     SkillNotFound: "skill_not_found",
     SkillVersionNotFound: "skill_version_not_found",
+    FileNotFound: "file_not_found",
     StoreLimitReached: "store_limit_reached",
     StoreDocumentLimitReached: "store_document_limit_reached",
     StoreBytesLimitReached: "store_bytes_limit_reached",
