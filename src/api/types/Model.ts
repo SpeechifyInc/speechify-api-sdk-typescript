@@ -14,8 +14,8 @@ export interface Model {
     /**
      * Whether this is the model used when a synthesis request omits
      * `model`. Exactly one model in the list is the default. Distinct
-     * from `recommended`: the default accepts every voice, while the
-     * recommended model may serve a curated or English-only set.
+     * from `recommended`: the default accepts every voice in every
+     * language, while the recommended model may be English-only.
      */
     default: boolean;
     /**
@@ -69,13 +69,12 @@ export interface Model {
      */
     endpoints: string[];
     /**
-     * Whether the model's stock voices are restricted to the set curated
-     * for it. When true, pick a stock voice whose `models` array in
-     * GET /v1/voices names this model; any other stock voice is rejected.
-     * When false, every stock catalogue voice works. Cloned voices are
-     * governed separately - always read each voice's own `models` array in
-     * GET /v1/voices, which reflects what your workspace may actually
-     * synthesize.
+     * Deprecated and always `false`. No model restricts synthesis to a
+     * registered voice set: every training conditions on the voice's own
+     * prompt audio, so every catalogue voice and every cloned voice works
+     * on every model, subject only to `english_voices_only`. Each voice's
+     * `models` array in GET /v1/voices stays the per-voice answer. The
+     * field remains on the response for compatibility.
      */
     curated_voices: boolean;
     /**
