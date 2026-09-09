@@ -140,6 +140,7 @@ export const ErrorCode = {
     TextMessageQuotaExceeded: "text_message_quota_exceeded",
     DurableRunsNotInPlan: "durable_runs_not_in_plan",
     ToolTransportUnsupported: "tool_transport_unsupported",
+    AgentConfigTooLarge: "agent_config_too_large",
     AgentRunNotPending: "agent_run_not_pending",
     AgentRunActionStale: "agent_run_action_stale",
     ShareLinkNotFound: "share_link_not_found",
