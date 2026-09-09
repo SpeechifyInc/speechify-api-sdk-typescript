@@ -40,6 +40,7 @@ export const ErrorCode = {
     KbDocumentNotFound: "kb_document_not_found",
     KbFolderNotFound: "kb_folder_not_found",
     ToolNotFound: "tool_not_found",
+    ToolNameTaken: "tool_name_taken",
     ChannelInstanceNotFound: "channel_instance_not_found",
     TeamNotFound: "team_not_found",
     TriggerNotFound: "trigger_not_found",
