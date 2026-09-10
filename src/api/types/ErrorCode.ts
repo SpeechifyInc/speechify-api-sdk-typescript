@@ -58,6 +58,8 @@ export const ErrorCode = {
     StoreDocumentLimitReached: "store_document_limit_reached",
     StoreBytesLimitReached: "store_bytes_limit_reached",
     StoreNotConfigured: "store_not_configured",
+    StoreDocumentVersionConflict: "store_document_version_conflict",
+    StoreDocumentDeleted: "store_document_deleted",
     HostedApisNotInPlan: "hosted_apis_not_in_plan",
     SkillsNotInPlan: "skills_not_in_plan",
     SkillInUse: "skill_in_use",
