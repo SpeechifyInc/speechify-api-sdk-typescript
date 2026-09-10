@@ -140,6 +140,7 @@ export const ErrorCode = {
     TextChannelNotInPlan: "text_channel_not_in_plan",
     ChannelNotInPlan: "channel_not_in_plan",
     TextTurnFailed: "text_turn_failed",
+    ConversationTurnInProgress: "conversation_turn_in_progress",
     TextMessageQuotaExceeded: "text_message_quota_exceeded",
     DurableRunsNotInPlan: "durable_runs_not_in_plan",
     ToolTransportUnsupported: "tool_transport_unsupported",
