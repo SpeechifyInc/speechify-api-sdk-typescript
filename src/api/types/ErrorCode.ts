@@ -70,6 +70,7 @@ export const ErrorCode = {
     RouteRunTimeout: "route_run_timeout",
     RouteRunFailed: "route_run_failed",
     RouteRunLimitReached: "route_run_limit_reached",
+    RouteReadLimitReached: "route_read_limit_reached",
     ConversationNotFound: "conversation_not_found",
     PhoneNumberNotFound: "phone_number_not_found",
     SipTrunkNotFound: "sip_trunk_not_found",
