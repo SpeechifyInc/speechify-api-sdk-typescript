@@ -73,6 +73,8 @@ export const ErrorCode = {
     RouteRunFailed: "route_run_failed",
     RouteRunLimitReached: "route_run_limit_reached",
     RouteReadLimitReached: "route_read_limit_reached",
+    RouteWriteLimitReached: "route_write_limit_reached",
+    HostedApiPublicRefused: "hosted_api_public_refused",
     ConversationNotFound: "conversation_not_found",
     PhoneNumberNotFound: "phone_number_not_found",
     SipTrunkNotFound: "sip_trunk_not_found",
