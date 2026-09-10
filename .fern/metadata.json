@@ -7,7 +7,7 @@
         "skipResponseValidation": true,
         "namespaceExport": "Speechify"
     },
-    "originGitCommit": "29704766863b93c5dd08e785324d62e642ddc2d3",
+    "originGitCommit": "608d3eed30a260cb79c6544af3302a0259a7505c",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
     "ciProvider": "github",
