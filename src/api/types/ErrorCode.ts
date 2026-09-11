@@ -62,6 +62,7 @@ export const ErrorCode = {
     StoreDocumentDeleted: "store_document_deleted",
     HostedApisNotInPlan: "hosted_apis_not_in_plan",
     SkillsNotInPlan: "skills_not_in_plan",
+    VoiceAgentsNotInPlan: "voice_agents_not_in_plan",
     SkillInUse: "skill_in_use",
     SkillToolNameConflict: "skill_tool_name_conflict",
     SkillLimitReached: "skill_limit_reached",
